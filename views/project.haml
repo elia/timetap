@@ -1,0 +1,19 @@
+.back
+  %a{:href => '/'} « Home
+  .clear
+%h2
+  Project:
+  %b= params[:name].underscore.humanize
+.days
+  - @project.days.to_a.sort_by(&:first).each do |(day, pinches)|
+    - time = work_time(pinches)
+    - next if time < 10.minutes
+    .day
+      %div
+        = day.strftime("%a %d %b %y")
+        %span.tip= time_ago_in_words Time.now - time
+      .work{:style => "width:#{time / 15.minutes.to_f}em;background-color:green;color:#ccc;overflow:visible;height:1em"}
+      %br
+
+
+

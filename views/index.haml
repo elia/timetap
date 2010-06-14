@@ -1,0 +1,36 @@
+%table
+  %tr.header
+    %th
+      %a{:href => '/?'+params.merge('sort' => :name).map{|pair| pair.join('=')}.join(';')} Project
+    %th
+      %a{:href => '/?'+params.merge('sort' => :elapsed).map{|pair| pair.join('=')}.join(';')} Work Time
+    %th
+      %a{:href => '/?'+params.merge('sort' => :last).map{|pair| pair.join('=')}.join(';')} Last Access
+  - raise @projects.inspect
+  - @projects.map do |project,attributes|
+    %tr
+      - STDOUT.puts [project, attributes].inspect
+      %th{:title => attributes[:name]}
+        %a.project{:href => "/project/#{project}"}= project ? project.underscore.humanize : '<i>other</i>'
+      %td
+        - elapsed_time = attributes[:elapsed].seconds
+        - if elapsed_time < 8.hours
+          = elapsed_hours = elapsed_time / 1.hour
+          = elapsed_hours == 1 ? 'hour' : 'hours'
+        - else
+          = elapsed_days  = elapsed_time / 8.hours
+          man
+          = elapsed_days  == 1 ? 'day'  : 'days'
+          and
+          = elapsed_hours = (elapsed_time % 8.hours) / 1.hour
+          = elapsed_hours == 1 ? 'hour' : 'hours'
+          
+        
+      %td
+        %i #{time_ago_in_words Time.at(attributes[:last])} ago
+      %td
+        %a.tip{:href => "/mate?path=#{attributes[:path]}"} mate
+      
+.clear
+%a.tip{:href => '/?'+params.merge('full' => nil).map{|pair| pair.compact.join('=')}.join(';')} full
+%a.tip{:href => '/?'+params.dup.delete_if{|k,v| k == 'full'}.map{|pair| pair.join('=')}.join(';')} short

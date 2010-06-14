@@ -2,68 +2,6 @@
 # coding: utf-8
 
 
-class Project
-  attr_reader :pinches
-  class << self
-    def projects
-      @projects ||= {}
-    end
-    alias all projects
-    def [] path
-      path = File.expand_path(path)
-
-      mid_path, project = path.scan(              /(Code)\/([^\/]+)/).flatten
-      mid_path, project = path.scan(/Users\/elia\/([^\/]+)\/([^\/]+)/).flatten if project.nil?
-      if project
-        project.chomp!
-        projects[project] ||= Project.new mid_path, project
-      else
-        nil
-      end
-    end
-  end
-  
-  def initialize mid_path, project
-    @name = project
-    @path = File.expand_path("~/#{mid_path}/#{project}/")
-    @pinches = []
-  end
-  
-  class Pinch
-    attr_accessor :start_time, :end_time
-    def initialize start_time
-      @end_time = @start_time = start_time
-    end
-    
-    def duration
-      end_time ? end_time - start_time : 30.seconds
-    end
-  end
-  
-  def << time
-    time = Time.at time
-    last_pinch = pinches.last
-    
-    if pinches.empty?
-      pinches << Pinch.new(time)
-    else
-      last_time = last_pinch.end_time
-      return unless time > last_time
-    
-      if (time - last_time) < 15.minutes
-        last_pinch.end_time = time
-      else
-        pinches << Pinch.new(time)
-      end
-    end
-  end
-  
-  def work_time
-    pinches.map(&:duration).inject(0.seconds, &:+)
-  end
-end
-
-
 
 if ARGV.include? '-f'
   go_foreground = true
@@ -76,6 +14,7 @@ tap_app = proc {
   Signal.trap("INT")  {exit}
   Signal.trap("TERM") {exit}
   require 'active_support'
+  require 'tap_projects'
   
   Thread.abort_on_exception = true
   @server = Thread.new {
@@ -87,144 +26,7 @@ tap_app = proc {
     require 'sinatra/base'
     require 'haml'
     require 'action_view'
-    
-    
-    class TapServer < Sinatra::Application
-      
-      def work_time timestamps
-        elapsed_time = 0
-        last_time = nil
-        
-        timestamps.each do |time|
-          if last_time
-            current_elapsed_time = time - last_time
-            if current_elapsed_time.seconds > 30.minutes or current_elapsed_time < 0
-              elapsed_time += 30.seconds
-            end
-            elapsed_time += current_elapsed_time
-          else
-            elapsed_time += 30.seconds
-          end
-          last_time = time
-        end
-        elapsed_time.seconds
-      end
-      
-      # def projects
-      #   if @projects.nil?
-      #     File.open(File.expand_path("~/.tap_history"), 'r') do |file|
-      #       last_line = {}
-      #       @projects = Hash.new
-      # 
-      #       file.each_line do |line|
-      #         time, path = line.split(": ")
-      #         path = File.expand_path(path)
-      #         
-      #         mid_path, project = path.scan(              /(Code)\/([^\/]+)/).flatten
-      #         mid_path, project = path.scan(/Users\/elia\/([^\/]+)\/([^\/]+)/).flatten if project.nil?
-      #         project.chomp! if project
-      #         
-      #         time = time.to_i
-      #         
-      #         if project and project == last_line[:project]
-      #           elapsed_time = time - last_line[:time]
-      #           if elapsed_time.seconds > 30.minutes or elapsed_time < 0
-      #             elapsed_time = 30.seconds
-      #           end
-      #         else
-      #           elapsed_time = 30.seconds
-      #         end
-      #         
-      #         # puts "#{project}: #{elapsed_time}s (#{time})"
-      #         
-      #         @projects[project] ||= {
-      #           :name => project.to_s, 
-      #           :path => File.expand_path("~/#{mid_path}/#{project}/"),
-      #           :since => time,
-      #           :elapsed => 0,
-      #           :pinches => []
-      #         }
-      #         
-      #         @projects[project][:pinches] << time
-      #         @projects[project][:last]     = time
-      #         @projects[project][:elapsed] += elapsed_time
-      #         
-      #         last_line = {:project => project, :time => time}
-      #       end
-      #     end
-      #   end
-      #   @projects
-      # end
-      def projects
-        File.open(File.expand_path("~/.tap_history"), 'r') do |file|
-          file.each_line do |line|
-            time, path = line.split(": ")
-            project = Project[path]
-            project << time.to_i if project
-          end
-        end
-        @projects = Project.all
-      end
-      
-      include ActionView::Helpers::DateHelper
-      set :haml, { :format        => :html5,
-                   :attr_wrapper  => '"'     }
-      use_in_file_templates!
-      
-      before do
-        content_type "text/html", :charset => "utf-8"
-      end
-      
-      get "/stylesheet.css" do
-        content_type "text/css", :charset => "utf-8"
-        sass :stylesheet
-      end
-      
-      get '/mate' do
-        tm_project = File.expand_path("~/Sviluppo/Current Projects/#{File.basename(params[:path])}.tmproj")
-        if File.exist?(tm_project)
-          `open "#{tm_project}"`
-        else
-          `mate "#{params[:path]}"`
-        end
-        redirect '/'
-      end
-      
-      get '/stop' do
-        $stop = true
-        Process.exit
-      end
-      
-      get '/project/:name' do
-        @project = projects[params[:name]]
-        
-        def @project.days
-          self[:pinches].group_by do |pinch|
-            Time.at(pinch).to_date
-          end
-        end
-        
-        haml :project
-      end
-      
-      get '/' do
-        # @projects = projects.to_a.sort_by do |(project,attributes)|
-        #   sort = (params[:sort] || :last).to_sym
-        #   
-        #   case sort
-        #   when :last; -attributes[:last]
-        #   else         attributes[sort] || ''
-        #   end
-        #   
-        # end.select do |(project,times)|
-        #   params.key?('full') or times[:elapsed] > 30.minutes
-        # end
-        @projects = Project.all
-        haml :index
-      end
-      
-    end
-    
+    require 'tap_server'
     
     Signal.trap("INT")  {exit}
     Signal.trap("TERM") {exit}
@@ -294,64 +96,6 @@ end
 
 __END__
 
-
-@@index
-%table
-  %tr.header
-    %th
-      %a{:href => '/?'+params.merge('sort' => :name).map{|pair| pair.join('=')}.join(';')} Project
-    %th
-      %a{:href => '/?'+params.merge('sort' => :elapsed).map{|pair| pair.join('=')}.join(';')} Work Time
-    %th
-      %a{:href => '/?'+params.merge('sort' => :last).map{|pair| pair.join('=')}.join(';')} Last Access
-    
-  - @projects.map do |project,attributes|
-    %tr
-      - #STDOUT.puts [project, attributes].inspect
-      %th{:title => attributes[:name]}
-        %a.project{:href => "/project/#{project}"}= project ? project.underscore.humanize : '<i>other</i>'
-      %td
-        - elapsed_time = attributes[:elapsed].seconds
-        - if elapsed_time < 8.hours
-          = elapsed_hours = elapsed_time / 1.hour
-          = elapsed_hours == 1 ? 'hour' : 'hours'
-        - else
-          = elapsed_days  = elapsed_time / 8.hours
-          man
-          = elapsed_days  == 1 ? 'day'  : 'days'
-          and
-          = elapsed_hours = (elapsed_time % 8.hours) / 1.hour
-          = elapsed_hours == 1 ? 'hour' : 'hours'
-          
-        
-      %td
-        %i #{time_ago_in_words Time.at(attributes[:last])} ago
-      %td
-        %a.tip{:href => "/mate?path=#{attributes[:path]}"} mate
-      
-.clear
-%a.tip{:href => '/?'+params.merge('full' => nil).map{|pair| pair.compact.join('=')}.join(';')} full
-%a.tip{:href => '/?'+params.dup.delete_if{|k,v| k == 'full'}.map{|pair| pair.join('=')}.join(';')} short
-
-
-
-@@project
-.back
-  %a{:href => '/'} « Home
-  .clear
-%h2
-  Project:
-  %b= params[:name].underscore.humanize
-.days
-  - @project.days.to_a.sort_by(&:first).each do |(day, pinches)|
-    - time = work_time(pinches)
-    - next if time < 10.minutes
-    .day
-      %div
-        = day.strftime("%a %d %b %y")
-        %span.tip= time_ago_in_words Time.now - time
-      .work{:style => "width:#{time / 15.minutes.to_f}em;background-color:green;color:#ccc;overflow:visible;height:1em"}
-      %br
 
 
 
