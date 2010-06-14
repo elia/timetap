@@ -1,0 +1,14 @@
+!!! Strict
+%html(html_attrs)
+  %head
+    %title TimeTap Log
+    %link{ :rel => 'stylesheet', :media => 'screen', :type => "text/css", :href => "/stylesheet.css?#{File.stat(__FILE__).mtime.to_i}" }
+  %body
+    %h1
+      TimeTap Log
+      %span.tip= Time.now.to_s
+    #content
+      #page_contents= yield
+    
+    %a.tip{:href => "/stop"} stop
+    

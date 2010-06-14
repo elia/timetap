@@ -16,7 +16,7 @@ class Project
       mid_path, project = path.scan(/Users\/elia\/([^\/]+)\/([^\/]+)/).flatten if project.nil?
       if project
         project.chomp!
-        projects[project] ||= Project.new project
+        projects[project] ||= Project.new mid_path, project
       else
         nil
       end
@@ -25,16 +25,14 @@ class Project
   
   def initialize mid_path, project
     @name = project
-    @path = File.expand_path("~/#{mid_path}/#{project}/"),
-    @since = time,
-    @elapsed = 0,
+    @path = File.expand_path("~/#{mid_path}/#{project}/")
     @pinches = []
   end
   
   class Pinch
     attr_accessor :start_time, :end_time
     def initialize start_time
-      @start_time = start_time
+      @end_time = @start_time = start_time
     end
     
     def duration
@@ -45,13 +43,18 @@ class Project
   def << time
     time = Time.at time
     last_pinch = pinches.last
-    last_time = last_pinch.end_time
-    return unless time > last_time
     
-    if (time - last_time) < 15.minutes
-      last_pinch.end_time = time
-    else
+    if pinches.empty?
       pinches << Pinch.new(time)
+    else
+      last_time = last_pinch.end_time
+      return unless time > last_time
+    
+      if (time - last_time) < 15.minutes
+        last_pinch.end_time = time
+      else
+        pinches << Pinch.new(time)
+      end
     end
   end
   
@@ -157,10 +160,10 @@ tap_app = proc {
           file.each_line do |line|
             time, path = line.split(": ")
             project = Project[path]
-            project << time
+            project << time.to_i if project
           end
         end
-        @projects = Projects.all
+        @projects = Project.all
       end
       
       include ActionView::Helpers::DateHelper
@@ -205,17 +208,18 @@ tap_app = proc {
       end
       
       get '/' do
-        @projects = projects.to_a.sort_by do |(project,attributes)|
-          sort = (params[:sort] || :last).to_sym
-          
-          case sort
-          when :last; -attributes[:last]
-          else         attributes[sort] || ''
-          end
-          
-        end.select do |(project,times)|
-          params.key?('full') or times[:elapsed] > 30.minutes
-        end
+        # @projects = projects.to_a.sort_by do |(project,attributes)|
+        #   sort = (params[:sort] || :last).to_sym
+        #   
+        #   case sort
+        #   when :last; -attributes[:last]
+        #   else         attributes[sort] || ''
+        #   end
+        #   
+        # end.select do |(project,times)|
+        #   params.key?('full') or times[:elapsed] > 30.minutes
+        # end
+        @projects = Project.all
         haml :index
       end
       
@@ -289,22 +293,6 @@ end
 
 
 __END__
-
-@@layout
-!!! Strict
-%html(html_attrs)
-  %head
-    %title TimeTap Log
-    %link{ :rel => 'stylesheet', :media => 'screen', :type => "text/css", :href => "/stylesheet.css?#{File.stat(__FILE__).mtime.to_i}" }
-  %body
-    %h1
-      TimeTap Log
-      %span.tip= Time.now.to_s
-    #content
-      #page_contents= yield
-    
-    %a.tip{:href => "/stop"} stop
-    
 
 
 @@index
