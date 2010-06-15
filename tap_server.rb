@@ -1,5 +1,43 @@
 class TapServer < Sinatra::Application
   
+  get '/' do
+    @projects = Project.all.to_a.sort_by do |(name,project)|
+      sort = (params[:sort] || :last).to_sym
+      
+      case sort
+      when :name;     -project.name.to_i
+      when :last;     -project.pinches.last.end_time.to_i
+      when :elapsed;  project.work_time
+      end
+      
+    end.select do |(name,project)|
+      params.key?('full') or project.work_time > 30.minutes
+    end
+    
+    haml :index
+  end
+  
+  get '/project/:name' do
+    load_projects
+    @project = Project[params[:name].to_sym]
+    redirect '/' if @project.nil?
+    
+    def @project.days
+      pinches.group_by do |pinch|
+        pinch.start_time.to_date
+      end
+    end
+    
+    haml :project
+  end
+  
+  
+  
+  #################
+  
+  
+  
+  
   def work_time timestamps
     elapsed_time = 0
     last_time = nil
@@ -51,38 +89,6 @@ class TapServer < Sinatra::Application
   get '/stop' do
     $stop = true
     Process.exit
-  end
-  
-  get '/project/:name' do
-    load_projects
-    @project = Project[params[:name].to_sym]
-    redirect '/' if @project.nil?
-    
-    def @project.days
-      pinches.group_by do |pinch|
-        pinch.start_time.to_date
-      end
-    end
-    
-    haml :project
-  end
-  
-  get '/' do
-    load_projects
-    @projects = Project.all.to_a.sort_by do |(name,project)|
-      sort = (params[:sort] || :last).to_sym
-      
-      case sort
-      when :name;     -project.name.to_i
-      when :last;     -project.pinches.last.end_time.to_i
-      when :elapsed;  project.work_time
-      end
-      
-    end.select do |(name,project)|
-      params.key?('full') or project.work_time > 30.minutes
-    end
-    
-    haml :index
   end
   
 end

@@ -20,7 +20,9 @@ class Project
       @projects ||= {}
     end
     
-    alias all projects
+    def all
+      load_file('~/.tap_history') if projects.empty?
+    end
     
     def [] path
       load_file('~/.tap_history') if projects.empty?
