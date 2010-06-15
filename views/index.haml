@@ -7,7 +7,7 @@
     %th
       %a{:href => '/?'+params.merge('sort' => :last).map{|pair| pair.join('=')}.join(';')} Last Access
   
-  - @projects.each do |(name, project)|
+  - @projects.each do |project|
     - elapsed_time = project.work_time.to_i
     - hours        = elapsed_time/1.hour
     %tr
@@ -36,5 +36,3 @@
         %a.tip{:href => "/mate?path=#{project.path}"} mate
       
 .clear
-%a.tip{:href => '/?'+params.merge('full' => nil).map{|pair| pair.compact.join('=')}.join(';')} full
-%a.tip{:href => '/?'+params.dup.delete_if{|k,v| k == 'full'}.map{|pair| pair.join('=')}.join(';')} short

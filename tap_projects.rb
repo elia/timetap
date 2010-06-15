@@ -17,27 +17,32 @@ class Project
     end
     
     def projects
-      @projects ||= {}
+      @projects ||= HashWithIndifferentAccess.new
     end
     
     def all
       load_file('~/.tap_history') if projects.empty?
+      projects.values
     end
     
-    def [] path
+    def find name
       load_file('~/.tap_history') if projects.empty?
+      projects[name.underscore.downcase]
+    end
+
+    def [] path
       path = File.expand_path(path)
 
       mid_path, name = path.scan(              /(Code)\/([^\/]+)/).flatten
       mid_path, name = path.scan(/Users\/elia\/([^\/]+)\/([^\/]+)/).flatten if name.nil?
       if name
         name.chomp!
-        if projects[name].nil?
+        key = name.underscore.downcase
+        if projects[key].nil?
           project = Project.new mid_path, name
-          projects[name] = project
-          puts name
+          projects[key] = project
         end
-        project
+        projects[key]
       else
         nil
       end
@@ -65,7 +70,6 @@ class Project
   def << time
     time = Time.at time
     last_pinch = pinches.last
-    
     if pinches.empty?
       pinches << Pinch.new(time)
     else

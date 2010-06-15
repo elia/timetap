@@ -1,25 +1,21 @@
 class TapServer < Sinatra::Application
   
   get '/' do
-    @projects = Project.all.to_a.sort_by do |(name,project)|
-      sort = (params[:sort] || :last).to_sym
-      
+    sort = (params[:sort] || :last).to_sym
+    
+    @projects = Project.all.sort_by do |project|
       case sort
-      when :name;     -project.name.to_i
+      when :name;     project.name
       when :last;     -project.pinches.last.end_time.to_i
-      when :elapsed;  project.work_time
+      when :elapsed;  -project.work_time
       end
-      
-    end.select do |(name,project)|
-      params.key?('full') or project.work_time > 30.minutes
-    end
+    end.select{|p| p.work_time > 30.minutes}
     
     haml :index
   end
   
   get '/project/:name' do
-    load_projects
-    @project = Project[params[:name].to_sym]
+    @project = Project.find(params[:name])
     redirect '/' if @project.nil?
     
     def @project.days
@@ -55,10 +51,6 @@ class TapServer < Sinatra::Application
       last_time = time
     end
     elapsed_time.seconds
-  end
-  
-  def load_projects
-    Project.load_file('~/.tap_history')
   end
   
   include ActionView::Helpers::DateHelper
