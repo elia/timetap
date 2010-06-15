@@ -19,60 +19,8 @@ class TapServer < Sinatra::Application
     elapsed_time.seconds
   end
   
-  # def projects
-  #   if @projects.nil?
-  #     File.open(File.expand_path("~/.tap_history"), 'r') do |file|
-  #       last_line = {}
-  #       @projects = Hash.new
-  # 
-  #       file.each_line do |line|
-  #         time, path = line.split(": ")
-  #         path = File.expand_path(path)
-  #         
-  #         mid_path, project = path.scan(              /(Code)\/([^\/]+)/).flatten
-  #         mid_path, project = path.scan(/Users\/elia\/([^\/]+)\/([^\/]+)/).flatten if project.nil?
-  #         project.chomp! if project
-  #         
-  #         time = time.to_i
-  #         
-  #         if project and project == last_line[:project]
-  #           elapsed_time = time - last_line[:time]
-  #           if elapsed_time.seconds > 30.minutes or elapsed_time < 0
-  #             elapsed_time = 30.seconds
-  #           end
-  #         else
-  #           elapsed_time = 30.seconds
-  #         end
-  #         
-  #         # puts "#{project}: #{elapsed_time}s (#{time})"
-  #         
-  #         @projects[project] ||= {
-  #           :name => project.to_s, 
-  #           :path => File.expand_path("~/#{mid_path}/#{project}/"),
-  #           :since => time,
-  #           :elapsed => 0,
-  #           :pinches => []
-  #         }
-  #         
-  #         @projects[project][:pinches] << time
-  #         @projects[project][:last]     = time
-  #         @projects[project][:elapsed] += elapsed_time
-  #         
-  #         last_line = {:project => project, :time => time}
-  #       end
-  #     end
-  #   end
-  #   @projects
-  # end
-  def projects
-    File.open(File.expand_path("~/.tap_history"), 'r') do |file|
-      file.each_line do |line|
-        time, path = line.split(": ")
-        project = Project[path]
-        project << time.to_i if project
-      end
-    end
-    @projects = Project.all
+  def load_projects
+    Project.load_file('~/.tap_history')
   end
   
   include ActionView::Helpers::DateHelper
@@ -82,6 +30,7 @@ class TapServer < Sinatra::Application
   
   before do
     content_type "text/html", :charset => "utf-8"
+    Project.load_file('~/.tap_history')
   end
   
   get "/stylesheet.css" do
@@ -105,11 +54,13 @@ class TapServer < Sinatra::Application
   end
   
   get '/project/:name' do
-    @project = projects[params[:name]]
+    load_projects
+    @project = Project[params[:name].to_sym]
+    redirect '/' if @project.nil?
     
     def @project.days
-      self[:pinches].group_by do |pinch|
-        Time.at(pinch).to_date
+      pinches.group_by do |pinch|
+        pinch.start_time.to_date
       end
     end
     
@@ -117,18 +68,20 @@ class TapServer < Sinatra::Application
   end
   
   get '/' do
-    # @projects = projects.to_a.sort_by do |(project,attributes)|
-    #   sort = (params[:sort] || :last).to_sym
-    #   
-    #   case sort
-    #   when :last; -attributes[:last]
-    #   else         attributes[sort] || ''
-    #   end
-    #   
-    # end.select do |(project,times)|
-    #   params.key?('full') or times[:elapsed] > 30.minutes
-    # end
-    @projects = Project.all
+    load_projects
+    @projects = Project.all.to_a.sort_by do |(name,project)|
+      sort = (params[:sort] || :last).to_sym
+      
+      case sort
+      when :name;     -project.name.to_i
+      when :last;     -project.pinches.last.end_time.to_i
+      when :elapsed;  project.work_time
+      end
+      
+    end.select do |(name,project)|
+      params.key?('full') or project.work_time > 30.minutes
+    end
+    
     haml :index
   end
   

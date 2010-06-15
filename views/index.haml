@@ -6,30 +6,34 @@
       %a{:href => '/?'+params.merge('sort' => :elapsed).map{|pair| pair.join('=')}.join(';')} Work Time
     %th
       %a{:href => '/?'+params.merge('sort' => :last).map{|pair| pair.join('=')}.join(';')} Last Access
-  - raise @projects.inspect
-  - @projects.map do |project,attributes|
+  
+  - @projects.each do |(name, project)|
+    - elapsed_time = project.work_time.to_i
+    - hours        = elapsed_time/1.hour
     %tr
-      - STDOUT.puts [project, attributes].inspect
-      %th{:title => attributes[:name]}
-        %a.project{:href => "/project/#{project}"}= project ? project.underscore.humanize : '<i>other</i>'
+      %th{:title => project.name}
+        %a.project{:href => "/project/#{project.name}", :title => "#{hours.to_i}h €20/h:#{hours*20}, €25/h:#{hours*25}, €30/h:#{hours*30}"}= project.name ? project.name.underscore.humanize : '<i>other</i>'
       %td
-        - elapsed_time = attributes[:elapsed].seconds
-        - if elapsed_time < 8.hours
+        - if elapsed_time < 1.hours
+          = elapsed_minutes = elapsed_time / 1.minute
+          = elapsed_minutes == 1 ? 'minute' : 'minutes'
+        - elsif elapsed_time < 8.hours
           = elapsed_hours = elapsed_time / 1.hour
           = elapsed_hours == 1 ? 'hour' : 'hours'
         - else
           = elapsed_days  = elapsed_time / 8.hours
           man
           = elapsed_days  == 1 ? 'day'  : 'days'
-          and
-          = elapsed_hours = (elapsed_time % 8.hours) / 1.hour
-          = elapsed_hours == 1 ? 'hour' : 'hours'
+          - if (elapsed_hours = (elapsed_time % 8.hours) / 1.hour) >= 1
+            and
+            = elapsed_hours
+            = elapsed_hours == 1 ? 'hour' : 'hours'
           
         
       %td
-        %i #{time_ago_in_words Time.at(attributes[:last])} ago
+        %i #{time_ago_in_words Time.at(project.pinches.last.end_time)} ago
       %td
-        %a.tip{:href => "/mate?path=#{attributes[:path]}"} mate
+        %a.tip{:href => "/mate?path=#{project.path}"} mate
       
 .clear
 %a.tip{:href => '/?'+params.merge('full' => nil).map{|pair| pair.compact.join('=')}.join(';')} full

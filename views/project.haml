@@ -3,17 +3,32 @@
   .clear
 %h2
   Project:
-  %b= params[:name].underscore.humanize
-.days
-  - @project.days.to_a.sort_by(&:first).each do |(day, pinches)|
-    - time = work_time(pinches)
-    - next if time < 10.minutes
-    .day
-      %div
+  %b= @project.name.humanize
+  .tip (#{@project.work_time.to_i / 8.hours})
+
+%p #{@project.pinches.size} pinches
+
+%table.days
+  - pinches_by_day = @project.pinches.group_by{|pinch| pinch.start_time.to_date}
+  - pinches_by_day.each do |day, pinches|
+    - time = pinches.map(&:duration).inject(0.seconds, &:+)
+    %tr.day
+      %td
         = day.strftime("%a %d %b %y")
         %span.tip= time_ago_in_words Time.now - time
-      .work{:style => "width:#{time / 15.minutes.to_f}em;background-color:green;color:#ccc;overflow:visible;height:1em"}
-      %br
+      %td
+        .work{:style => "width:#{time / 15.minutes.to_f}em;background-color:green;color:#ccc;overflow:visible;height:1em"}
+
+-# .days
+  -# - @project.days.to_a.sort_by(&:first).each do |(day, pinches)|
+  -#   - time = work_time(pinches)
+  -#   - next if time < 10.minutes
+  -#   .day
+  -#     %div
+  -#       = day.strftime("%a %d %b %y")
+  -#       %span.tip= time_ago_in_words Time.now - time
+  -#     .work{:style => "width:#{time / 15.minutes.to_f}em;background-color:green;color:#ccc;overflow:visible;height:1em"}
+  -#     %br
 
 
 
