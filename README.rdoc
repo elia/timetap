@@ -6,7 +6,6 @@ Once it's launched you don't have to bother anymore starting/stopping timers or
 inventing some arbitrary amount of time to fill your fancy time tracker.
 
 
-
 == How does it work
 
 TimeTap keeps an eye on (tracks) the modification time of the frontmost file 
@@ -19,14 +18,15 @@ in the same project.
 Technically it saves a timestamp+path of the frontmost file in TextMate every 
 30 seconds, then it digests all this information in a nice Sinatra webapp.
 
+The server will respond on http://0.0.0.0:1111/.
 
 
 == Assumptions
 
-* You use TextMate.
+* You on ruby 1.9
+* You code on TextMate.
 * You save often (like me), at least every 30 minutes.
 * You keep your code organized (I use ~/Code as main code folder).
-
 
 
 == TODO
@@ -40,7 +40,6 @@ Technically it saves a timestamp+path of the frontmost file in TextMate every
 - export to csv (?)
 
 
-
 == How to Contribute
 
 Use it, love it, then...
@@ -52,7 +51,6 @@ Use it, love it, then...
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
-
 
 
 == Copyright

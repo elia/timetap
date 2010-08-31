@@ -6,6 +6,10 @@ class Project
       @pause_limit ||= 30.minutes
     end
     
+    def history_file
+      "#{ROOT}/.tap_history"
+    end
+    
     def load_file path
       File.open(File.expand_path(path), 'r', external_encoding: 'utf-8') do |file|
         file.each_line do |line|
@@ -21,20 +25,20 @@ class Project
     end
     
     def all
-      load_file('~/.tap_history') if projects.empty?
+      load_file(history_file) if projects.empty?
       projects.values
     end
     
     def find name
-      load_file('~/.tap_history') if projects.empty?
+      load_file(history_file) if projects.empty?
       projects[name.underscore.downcase]
     end
 
     def [] path
       path = File.expand_path(path)
 
-      mid_path, name = path.scan(               /(Code)\/([^\/]+)/).flatten
-      mid_path, name = path.scan(/Users\/elia\/([^\/]+)\/([^\/]+)/).flatten if name.nil?
+      mid_path, name = path.scan(%r{(#{CONFIG[:code] || "Code"})/([^/]+)}).flatten
+      mid_path, name = path.scan(%r{#{File.expand_path("~")}/([^/]+)/([^/]+)}).flatten if name.nil?
       if name
         name.chomp!
         key = name.underscore.downcase

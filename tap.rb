@@ -15,9 +15,9 @@ end
 tap_app = proc {
   
   # CONFIGURATION
-  
+  require 'yaml'
   config_file = File.exist?(user_config = File.expand_path("~/.tap_config")) ? user_config : File.expand_path('config.yaml', __FILE__)
-  CONFIG = YAML.load_path(config_file)
+  CONFIG = YAML.load_file(config_file)
   PORT = CONFIG['port'] || 1111
   ROOT = CONFIG['root'] || File.expand_path('~')
   
