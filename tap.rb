@@ -86,6 +86,9 @@ tap_app = proc {
 }
 
 
+# Try to replace "ruby" with "TimeTap" in the command string (for "ps -A" & co.)
+$0 = 'TimeTap'
+
 unless go_foreground
   pid = fork {
     Process.daemon(true)
