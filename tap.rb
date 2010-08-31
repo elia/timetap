@@ -1,5 +1,9 @@
-#!/usr/bin/env ruby19
-# coding: utf-8
+#!/usr/bin/env ruby-1.9.2-p0@global
+# encoding: utf-8
+
+gem 'activesupport',  '~> 2.3.8'
+gem 'actionpack',     '~> 2.3.8'
+gem 'i18n',           '~> 0.3.5'
 
 $LOAD_PATH.unshift File.expand_path("~/Code/tap")
 
