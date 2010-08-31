@@ -7,7 +7,7 @@ class Project
     end
     
     def load_file path
-      File.open(File.expand_path(path), 'r') do |file|
+      File.open(File.expand_path(path), 'r', external_encoding: 'utf-8') do |file|
         file.each_line do |line|
           time, path = line.split(": ")
           project = self[path]

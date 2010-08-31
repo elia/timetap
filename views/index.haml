@@ -12,7 +12,7 @@
     - hours        = elapsed_time/1.hour
     %tr
       %th{:title => project.name}
-        %a.project{:href => "/project/#{project.name}", :title => "#{hours.to_i}h €20/h:#{hours*20}, €25/h:#{hours*25}, €30/h:#{hours*30}"}= project.name ? project.name.underscore.humanize : '<i>other</i>'
+        %a.project{:href => "/project/#{project.name}", :title => "#{hours.to_i}h \n  eur#{hours*20}@eur20/h \n  eur#{hours*25}@eur25/h \n  eur#{hours*30}@eur30/h"}= project.name ? project.name.underscore.humanize : '<i>other</i>'
       %td
         - if elapsed_time < 1.hours
           = elapsed_minutes = elapsed_time / 1.minute
