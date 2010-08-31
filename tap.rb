@@ -29,6 +29,7 @@ tap_app = proc {
     puts "loading sinatra..."
     require 'sinatra/base'
     require 'haml'
+    require 'sass'
     require 'action_view'
     require 'tap_server'
     
