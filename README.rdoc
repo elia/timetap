@@ -1,0 +1,60 @@
+= TimeTap
+
+TimeTap helps you track the time you spend coding on each project while with TextMate.
+
+Once it's launched you don't have to bother anymore starting/stopping timers or 
+inventing some arbitrary amount of time to fill your fancy time tracker.
+
+
+
+== How does it work
+
+TimeTap keeps an eye on (tracks) the modification time of the frontmost file 
+and tells you how much time you spent on each project. 
+
+If you stop coding for a while while squeezing your brains TimeTap understands. 
+TimeTap will consider "coding time" pauses to up to 30 minutes between to saves 
+in the same project.
+
+Technically it saves a timestamp+path of the frontmost file in TextMate every 
+30 seconds, then it digests all this information in a nice Sinatra webapp.
+
+
+
+== Assumptions
+
+* You use TextMate.
+* You save often (like me), at least every 30 minutes.
+* You keep your code organized (I use ~/Code as main code folder).
+
+
+
+== TODO
+
+- support other text editors, or at least make it easy to do so
+- (r)spec it!
+- make it more configurable
+- gemify (with jeweler)
+- flatten encoding quick-fixes with proper solutions (eat and spit only utf8)
+- integration with external (online) time tracking tools
+- export to csv (?)
+
+
+
+== How to Contribute
+
+Use it, love it, then...
+
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+
+
+== Copyright
+
+Copyright (c) 2009 Elia Schito. See LICENSE for details.
