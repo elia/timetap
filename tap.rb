@@ -11,14 +11,30 @@ if ARGV.include? '-f'
   go_foreground = true
   ARGV.shift
 end
-PORT = 1111
-ROOT = "/Users/elia"
 
 tap_app = proc {
+  
+  # CONFIGURATION
+  
+  config_file = File.exist?(user_config = File.expand_path("~/.tap_config")) ? user_config : File.expand_path('config.yaml', __FILE__)
+  CONFIG = YAML.load_path(config_file)
+  PORT = CONFIG['port'] || 1111
+  ROOT = CONFIG['root'] || File.expand_path('~')
+  
+  
+  
+  
+  # SIGNAL HANDLING
+  
   Signal.trap("INT")  {exit}
   Signal.trap("TERM") {exit}
   require 'active_support'
   require 'tap_projects'
+  
+  
+  
+  
+  # WEB SERVER
   
   Thread.abort_on_exception = true
   @server = Thread.new {
@@ -92,10 +108,35 @@ $0 = 'TimeTap'
 
 unless go_foreground
   pid = fork {
+    
+    # Define Process::daemon without waiting for active support to be loaded
+    # so that the "tap" command exits immediatly.
+    # from active_support-3
+    def Process.daemon(nochdir = nil, noclose = nil)
+      exit if fork                     # Parent exits, child continues.
+      Process.setsid                   # Become session leader.
+      exit if fork                     # Zap session leader. See [1].
+    
+      unless nochdir
+        Dir.chdir "/"                  # Release old working directory.
+      end
+    
+      File.umask 0000                  # Ensure sensible umask. Adjust as needed.
+    
+      unless noclose
+        STDIN.reopen "/dev/null"       # Free file descriptors and
+        STDOUT.reopen "/dev/null", "a" # point them somewhere sensible.
+        STDERR.reopen '/dev/null', 'a'
+      end
+    
+      trap("TERM") { exit }
+    
+      return 0
+    end
+    
     Process.daemon(true)
     tap_app.call
   }
-  # Process.detach pid
 else
   puts "going foreground"
   tap_app.call

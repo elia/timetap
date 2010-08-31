@@ -33,7 +33,7 @@ class Project
     def [] path
       path = File.expand_path(path)
 
-      mid_path, name = path.scan(              /(Code)\/([^\/]+)/).flatten
+      mid_path, name = path.scan(               /(Code)\/([^\/]+)/).flatten
       mid_path, name = path.scan(/Users\/elia\/([^\/]+)\/([^\/]+)/).flatten if name.nil?
       if name
         name.chomp!

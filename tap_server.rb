@@ -1,5 +1,22 @@
 class TapServer < Sinatra::Application
   
+  include ActionView::Helpers::DateHelper
+  set :haml, { :format        => :html5,
+               :attr_wrapper  => '"' , 
+               :encoding => 'UTF-8'    }
+  set :root, File.dirname(__FILE__)
+  set :views, Proc.new { File.expand_path File.join(root, "views") }
+  
+  
+  before do
+    content_type "text/html", :charset => "utf-8"
+    Project.load_file('~/.tap_history')
+  end
+  
+  
+  
+  
+  
   get '/' do
     sort = (params[:sort] || :last).to_sym
     
@@ -27,49 +44,13 @@ class TapServer < Sinatra::Application
     haml :project
   end
   
-  
-  
-  #################
-  
-  
-  
-  
-  def work_time timestamps
-    elapsed_time = 0
-    last_time = nil
-    
-    timestamps.each do |time|
-      if last_time
-        current_elapsed_time = time - last_time
-        if current_elapsed_time.seconds > 30.minutes or current_elapsed_time < 0
-          elapsed_time += 30.seconds
-        end
-        elapsed_time += current_elapsed_time
-      else
-        elapsed_time += 30.seconds
-      end
-      last_time = time
-    end
-    elapsed_time.seconds
-  end
-  
-  include ActionView::Helpers::DateHelper
-  set :haml, { :format        => :html5,
-               :attr_wrapper  => '"'     }
-  use_in_file_templates!
-  
-  before do
-    content_type "text/html", :charset => "utf-8"
-    Project.load_file('~/.tap_history')
-  end
-  
   get "/stylesheet.css" do
     content_type "text/css", :charset => "utf-8"
     sass :stylesheet
   end
   
   get '/mate' do
-    tm_project = File.expand_path("~/Sviluppo/Current Projects/#{File.basename(params[:path])}.tmproj")
+    tm_project = File.expand_path("#{CONFIG[:textmate_projects] || 'Development/Current Projects'}/#{File.basename(params[:path])}.tmproj")
     if File.exist?(tm_project)
       `open "#{tm_project}"`
     else
