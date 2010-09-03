@@ -1,7 +1,6 @@
-
 task :launcher do
   home = File.expand_path("~")
-  ruby = ENV[TAP_RUBY] || "#{home}/.rvm/bin/ruby-1.9.2-p0@global"
+  ruby = ENV['TAP_RUBY'] || "#{home}/.rvm/bin/ruby-1.9.2-p0@global"
   
   File.open(File.expand_path("#{home}/Library/LaunchAgents/com.eliaesocietas.TimeTap.plist"), 'w') do |file|
     
