@@ -18,7 +18,7 @@ task :launcher do
     	<key>ProgramArguments</key>
     	<array>
     		<string>#{ruby}</string>
-    		<string>#{File.expand_path('tap.rb', __FILE__)}</string>
+    		<string>#{File.expand_path('../tap.rb', __FILE__)}</string>
     		<string>-f</string>
     	</array>
 
