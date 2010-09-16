@@ -1,12 +1,15 @@
-= TimeTap
+# TimeTap
 
 TimeTap helps you track the time you spend coding on each project while with TextMate.
 
 Once it's launched you don't have to bother anymore starting/stopping timers or 
 inventing some arbitrary amount of time to fill your fancy time tracker.
 
+<img src="http://f.cl.ly/items/17025fecf7189518cf07/timetap-project-list.png"/>
+<img src="http://f.cl.ly/items/7b96ad2f7b49a95fdfd0/timetap-project-page.png"/>
 
-== How does it work
+
+## How does it work
 
 TimeTap keeps an eye on (tracks) the modification time of the frontmost file 
 and tells you how much time you spent on each project. 
@@ -21,14 +24,14 @@ Technically it saves a timestamp+path of the frontmost file in TextMate every
 The server will respond on http://0.0.0.0:1111/.
 
 
-== Instructions
+## Instructions
 
 Run `ruby tap.rb` or run 
 `rake launcher && launchctl load ~/Library/LaunchAgents` 
 to add a plist for OSX's launchd and have it launched automatically at login.
 
 
-== Assumptions
+## Assumptions
 
 * You on ruby 1.9
 * You code on TextMate.
@@ -36,7 +39,7 @@ to add a plist for OSX's launchd and have it launched automatically at login.
 * You keep your code organized (I use ~/Code as main code folder).
 
 
-== TODO
+## TODO
 
 - support other text editors, or at least make it easy to do so
 - (r)spec it!
@@ -47,7 +50,7 @@ to add a plist for OSX's launchd and have it launched automatically at login.
 - export to csv (?)
 
 
-== How to Contribute
+## How to Contribute
 
 Use it, love it, then...
 
@@ -60,6 +63,6 @@ Use it, love it, then...
 * Send me a pull request. Bonus points for topic branches.
 
 
-== Copyright
+## Copyright
 
 Copyright (c) 2009 Elia Schito. See LICENSE for details.
