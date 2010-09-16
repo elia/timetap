@@ -1,4 +1,4 @@
-- pinches_by_day = @project.pinches.group_by{|pinch| pinch.start_time.to_date}
+- this_year = Time.now.year
 
 .back
   %a{:href => '/'} &laquo; Home
@@ -8,15 +8,15 @@
   %b= @project.name.humanize
   %span.tip (#{@project.work_time.to_i / 1.hours} hours)
 
-%p.tip #{@project.pinches.size} pinches, mean: #{"%.2f" % (@project.work_time / pinches_by_day.size / 1.hour)} hours per day in #{pinches_by_day.size} days of work
+%p.tip #{@project.pinches.size} pinches, #{time_ago_in_words Time.now - (@project.work_time / @project.days.size / 1.hour).hours} per day in #{@project.days.size} days of work
 
 %table.days
-  - pinches_by_day.each do |day, pinches|
+  - @project.days.to_a.sort_by(&:first).reverse.each do |day, pinches|
     - time = pinches.map(&:duration).inject(0.seconds, &:+)
     - if time >= 1.minute
       %tr.day
         %td
-          = day.strftime("%a %d %b %y")
-          %span.tip= time_ago_in_words Time.now - time
+          = this_year != day.year ? day.strftime("%Y %b %d, %a") : day.strftime("%b %d, %a")
         %td
-          .work{:style => "width:#{time / 15.minutes.to_f}em;background-color:green;color:#ccc;overflow:visible;height:1em"}
+          %span.work{:style => "background-color:green;color:#ccc;overflow:visible;height:1em"}= '&nbsp;' * (time / 5.minutes.to_f)
+          %span.tip= time_ago_in_words Time.now - time
