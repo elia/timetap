@@ -1,6 +1,6 @@
 # TimeTap
 
-TimeTap helps you track the time you spend coding on each project while with TextMate.
+TimeTap helps you track the time you spend coding on each project while in TextMate.
 
 Once it's launched you don't have to bother anymore starting/stopping timers or 
 inventing some arbitrary amount of time to fill your fancy time tracker.
