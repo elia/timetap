@@ -1,9 +1,14 @@
-#!/usr/bin/env ruby-1.9.2-p0@global
+#!/usr/bin/env ruby
 # encoding: utf-8
 
+
+require 'rubygems'
 gem 'activesupport',  '~> 2.3.8'
 gem 'actionpack',     '~> 2.3.8'
 gem 'i18n',           '~> 0.3.5'
+gem 'haml'
+gem 'rb-appscript'
+gem 'sinatra'
 
 $LOAD_PATH.unshift File.expand_path("~/Code/tap")
 
@@ -11,6 +16,8 @@ if ARGV.include? '-f'
   go_foreground = true
   ARGV.shift
 end
+
+RUBY19 = RUBY_VERSION.to_f >= 1.9
 
 tap_app = proc {
   

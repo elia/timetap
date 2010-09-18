@@ -33,7 +33,6 @@ to add a plist for OSX's launchd and have it launched automatically at login.
 
 ## Assumptions
 
-* You on ruby 1.9
 * You code on TextMate.
 * You save often (like me), at least every 30 minutes.
 * You keep your code organized (I use ~/Code as main code folder).

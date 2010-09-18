@@ -3,7 +3,7 @@ class TapServer < Sinatra::Application
   include ActionView::Helpers::DateHelper
   set :haml, { :format        => :html5,
                :attr_wrapper  => '"' , 
-               :encoding => 'UTF-8'    }
+               :encoding => RUBY19 ? 'UTF-8' : nil}
   set :root, File.dirname(__FILE__)
   set :views, Proc.new { File.expand_path File.join(root, "views") }
   

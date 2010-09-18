@@ -11,7 +11,8 @@ class Project
     end
     
     def load_file path
-      File.open(File.expand_path(path), 'r', external_encoding: 'utf-8') do |file|
+      
+      File.open(File.expand_path(path), 'r', RUBY19 ? {:external_encoding => 'utf-8'} : nil) do |file|
         file.each_line do |line|
           time, path = line.split(": ")
           project = self[path]
