@@ -40,8 +40,25 @@ timetap uses a config file to control where projects are kept, etc. Put this con
 
     root - where the timetap logs should be saved. Recommended value: ~
     code - where all you project live, in a flat hierachy. 
+    nested_project_layers - see below, on nested projects. Default is 1
     
-      (Currently timetap does not handle nestled projects - for example, it will not handle the situation where you have client folders in ~/Code , and under there keep projects you want to seperatly tracked.)
+
+Nested Projects allows you to keep your projects inside a hierarchy, instead of the original assumption of timetap (which is that all projects are flat).
+
+For example, you could keep your directory structure might look like:
+
+    ~/Code/
+      Clients/
+        AcmeCorp/
+          website/
+            intranet
+        BetaCorp/
+          skunkworks/
+      OpenSource/
+        project_one/
+        timetap/
+
+A `nested_project_layers` setting of 2 (in your `.tap_config` file) would mean we track "AcmeCorp", "BetaCorp", and everything under OpenSource, as their own projects
     
 ## Assumptions
 

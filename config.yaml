@@ -2,3 +2,4 @@ textmate_projects: ~/Development/Current Projects
 root: ~
 port: 1111
 code: Code
+nested_project_layers: 1
