@@ -99,6 +99,22 @@ class Project
     def duration
       end_time ? end_time - start_time : 30.seconds
     end
+
+    def humanized_duration
+      seconds = duration
+
+      hours = mins = 0
+      if seconds >=  60 then
+        mins = (seconds / 60).to_i 
+        seconds = (seconds % 60 ).to_i
+
+        if mins >= 60 then
+          hours = (mins / 60).to_i 
+          mins = (mins % 60).to_i
+        end
+      end
+      "#{hours}h #{mins}m #{seconds}s"
+    end
   end
   
   def << time
@@ -120,6 +136,13 @@ class Project
   
   def work_time
     pinches.map(&:duration).inject(0.seconds, &:+)
+  end
+
+
+  def days
+    pinches.group_by do |pinch|
+      pinch.start_time.to_date
+    end
   end
 end
 

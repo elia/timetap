@@ -11,12 +11,14 @@
 %p.tip #{@project.pinches.size} pinches, #{time_ago_in_words Time.now - (@project.work_time / @project.days.size / 1.hour).hours} per day in #{@project.days.size} days of work
 
 %table.days
+  - current = 0
   - @project.days.to_a.sort_by(&:first).reverse.each do |day, pinches|
     - time = pinches.map(&:duration).inject(0.seconds, &:+)
     - if time >= 1.minute
       %tr.day
         %td
-          = this_year != day.year ? day.strftime("%Y %b %d, %a") : day.strftime("%b %d, %a")
+          %a.day{  :href=> "/project/#{@project.name}/#{current}" } #{( this_year != day.year ? day.strftime("%Y %b %d, %a") : day.strftime("%b %d, %a") )}
         %td
           %span.work{:style => "background-color:green;color:#ccc;overflow:visible;height:1em"}= '&nbsp;' * (time / 5.minutes.to_f)
           %span.tip= time_ago_in_words Time.now - time
+    - current = current + 1

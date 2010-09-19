@@ -35,15 +35,22 @@ class TapServer < Sinatra::Application
     @project = Project.find(params[:name])
     redirect '/' if @project.nil?
     
-    def @project.days
-      pinches.group_by do |pinch|
-        pinch.start_time.to_date
-      end
-    end
-    
     haml :project
   end
   
+  
+  get "/project/:name/:day" do
+    @project = Project.find(params[:name])
+    redirect '/' if @project.nil?
+
+    days = @project.days.to_a.sort_by(&:first).reverse
+    @current_day = days[ params[:day].to_i ][0] #pick an arbitrary date in the pinches
+
+    @pinches = @project.days[@current_day]
+    haml :project_day
+  end
+
+
   get "/stylesheet.css" do
     content_type "text/css", :charset => "utf-8"
     sass :stylesheet

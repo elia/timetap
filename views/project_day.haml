@@ -1,0 +1,24 @@
+- this_year = Time.now.year
+
+.back
+  %a{:href => '/'} &laquo; Home
+  .clear
+%h2
+  Project:
+  %b= @project.name.humanize
+  %span.tip (#{@project.work_time.to_i / 1.hours} hours)
+%h2
+  Detailed View For:
+  %b=( this_year != @current_day.year ? @current_day.strftime("%Y %b %d, %a") : @current_day.strftime("%b %d, %a") )
+
+%table.pinches
+  %tr
+    %th Start Time
+    %th End Time
+    %th Duration
+  - @pinches.each do |current_pinch|
+    %tr
+      %td= current_pinch.start_time.strftime("%H:%M:%S")
+      %td= current_pinch.end_time.strftime("%H:%M:%S")
+      %td= current_pinch.humanized_duration
+    
