@@ -10,6 +10,8 @@ gem 'haml'
 gem 'rb-appscript'
 gem 'sinatra'
 
+require 'appscript'
+
 $LOAD_PATH.unshift File.expand_path("~/Code/tap")
 
 if ARGV.include? '-f'
@@ -66,7 +68,6 @@ tap_app = proc {
   class MateError < StandardError
   end
   
-  require 'appscript'
   include Appscript
   last = nil
   File.open(File.expand_path("#{ROOT}/.tap_history"), 'a') do |history|
