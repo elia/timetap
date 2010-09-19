@@ -30,7 +30,19 @@ Run `ruby tap.rb` or run
 `rake launcher && launchctl load ~/Library/LaunchAgents` 
 to add a plist for OSX's launchd and have it launched automatically at login.
 
+## Setting up config file
 
+timetap uses a config file to control where projects are kept, etc. Put this config file in `~/.tap_config`.
+
+    cp config.yaml ~/.tap_config
+
+### Keys Explained
+
+    root - where the timetap logs should be saved. Recommended value: ~
+    code - where all you project live, in a flat hierachy. 
+    
+      (Currently timetap does not handle nestled projects - for example, it will not handle the situation where you have client folders in ~/Code , and under there keep projects you want to seperatly tracked.)
+    
 ## Assumptions
 
 * You code on TextMate.
