@@ -1,8 +1,10 @@
+plist_name = "com.eliaesocietas.TimeTap.plist"
+home = File.expand_path("~")
+ruby = ENV['TAP_RUBY'] || "#{home}/.rvm/bin/ruby-1.9.2-p0@global"
+plist_path = File.expand_path("#{home}/Library/LaunchAgents/#{plist_name}")
+
 desc "Add a plist for OSX's launchd and have *TimeTap* launched automatically at login."
 task :launcher do
-  home = File.expand_path("~")
-  ruby = ENV['TAP_RUBY'] || "#{home}/.rvm/bin/ruby-1.9.2-p0@global"
-  plist_path = File.expand_path("#{home}/Library/LaunchAgents/com.eliaesocietas.TimeTap.plist")
   puts "\nCreating launchd plist in\n  #{plist_path}"
   
   File.open(plist_path, 'w') do |file|
@@ -35,4 +37,25 @@ task :launcher do
     
     puts "\nCreated. Now run:\n  launchctl load ~/Library/LaunchAgents\n\n"
   end
+end
+
+desc "Restarts the daemon."
+task :restart do
+  command = "launchctl unload #{plist_path}; launchctl load #{plist_path}"
+  puts command
+  exec command
+end
+
+desc "Stops the daemon."
+task :start do
+  command = "launchctl unload #{plist_path}"
+  puts command
+  exec command
+end
+
+desc "Starts the daemon."
+task :start do
+  command = "launchctl load #{plist_path}"
+  puts command
+  exec command
 end
