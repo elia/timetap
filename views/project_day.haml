@@ -6,7 +6,7 @@
 %h2
   Project:
   %b= @project.name.humanize
-  %span.tip (#{@project.work_time.to_i / 1.hours} hours)
+  %span.tip (#{"%.2f" % (@project.work_time.to_i / 1.hours.to_f).to_s} hours)
 %h2
   Detailed View For:
   %b=( this_year != @current_day.year ? @current_day.strftime("%Y %b %d, %a") : @current_day.strftime("%b %d, %a") )
