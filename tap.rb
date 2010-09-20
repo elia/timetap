@@ -83,7 +83,7 @@ tap_app = proc {
         mtime = File.stat(path).mtime
         current = [path, mtime]
         
-        # Versione shell:
+        # The following equals to this shell code:
         # 
         #   `echo \`date +%s\`: \`pwd\``
         # 
