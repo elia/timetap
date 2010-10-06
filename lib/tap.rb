@@ -24,52 +24,52 @@ end
 RUBY19 = RUBY_VERSION.to_f >= 1.9
 
 tap_app = proc {
-  
+
   # CONFIGURATION
   require 'yaml'
   config_file = File.exist?(user_config = File.expand_path("~/.tap_config")) ? user_config : File.expand_path('config.yaml', __FILE__)
   CONFIG = YAML.load_file(config_file)
   PORT = CONFIG['port'] || 1111
   ROOT = CONFIG['root'] || File.expand_path('~')
-  
-  
-  
-  
+
+
+
+
   # SIGNAL HANDLING
   
   Signal.trap("INT")  {exit}
   Signal.trap("TERM") {exit}
   require 'active_support'
   require 'tap_projects'
-  
-  
-  
-  
+
+
+
+
   # WEB SERVER
-  
+
   Thread.abort_on_exception = true
   @server = Thread.new {
     
     Signal.trap("INT")  {exit}
     Signal.trap("TERM") {exit}
-    
+
     puts "loading sinatra..."
     require 'sinatra/base'
     require 'haml'
     require 'sass'
     require 'action_view'
     require 'server'
-    
+
     Signal.trap("INT")  {exit}
     Signal.trap("TERM") {exit}
-    
+
     TapServer.run! :host => 'localhost', :port => PORT
     exit
   }
-  
+
   class MateError < StandardError
   end
-  
+
   include Appscript
   last = nil
   File.open(File.expand_path("#{ROOT}/.tap_history"), 'a') do |history|
