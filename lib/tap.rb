@@ -14,6 +14,8 @@ require 'appscript'
 
 $LOAD_PATH.unshift File.expand_path("~/Code/tap")
 
+$LOAD_PATH.unshift( File.expand_path(File.dirname(__FILE__)) + "/tap/" )
+
 if ARGV.include? '-f'
   go_foreground = true
   ARGV.shift
