@@ -9,12 +9,14 @@ gem 'i18n',           '~> 0.3.5'
 gem 'haml'
 gem 'rb-appscript'
 gem 'sinatra'
+gem 'required'
 
 require 'appscript'
 
 $LOAD_PATH.unshift File.expand_path("~/Code/tap")
 
-$LOAD_PATH.unshift( File.expand_path(File.dirname(__FILE__)) + "/tap/" )
+LIB_ROOT = File.expand_path(File.dirname(__FILE__))
+$LOAD_PATH.unshift( LIB_ROOT + "/tap/" )
 
 if ARGV.include? '-f'
   go_foreground = true
@@ -41,6 +43,8 @@ tap_app = proc {
   Signal.trap("TERM") {exit}
   require 'active_support'
   require 'tap_projects'
+  require 'required'
+  required LIB_ROOT + "/tap/editors/"
 
 
 
