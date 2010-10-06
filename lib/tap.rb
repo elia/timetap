@@ -74,17 +74,19 @@ tap_app = proc {
   class EditorError < StandardError
   end
 
-  include Appscript
+
   last = nil
+
+  # TODO: pick which application the user wants...
+  editor = TextMate.new
+
   File.open(File.expand_path("#{ROOT}/.tap_history"), 'a') do |history|
     loop do
       exit if $stop
       begin
-        raise(MateError) if mate_isnt_running = `ps -ax -o comm|grep TextMate`.chomp.strip.empty?
-        mate = app('TextMate')
-        document = mate.document.get
-        raise(EditorError) if document.blank?
-        path = document.first.path.get rescue nil
+        raise(EditorError) unless editor.is_running?
+        path = editor.current_path
+
         raise(EditorError) if path.blank?
         mtime = File.stat(path).mtime
         current = [path, mtime]
