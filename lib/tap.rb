@@ -58,7 +58,7 @@ tap_app = proc {
     require 'haml'
     require 'sass'
     require 'action_view'
-    require 'tap_server'
+    require 'server'
     
     Signal.trap("INT")  {exit}
     Signal.trap("TERM") {exit}
