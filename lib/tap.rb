@@ -11,7 +11,6 @@ gem 'rb-appscript'
 gem 'sinatra'
 gem 'required'
 
-require 'appscript'
 
 $LOAD_PATH.unshift File.expand_path("~/Code/tap")
 
@@ -27,8 +26,27 @@ RUBY19 = RUBY_VERSION.to_f >= 1.9
 
 tap_app = proc {
 
-  # CONFIGURATION
+  # REQUIREMENTS
+
+  require 'appscript'
+  require 'active_support'
+  require 'tap_projects'
+  require 'sinatra/base'
+  require 'haml'
+  require 'sass'
+  require 'action_view'
   require 'yaml'
+  require 'required'
+
+  # internal files now...
+  require 'server'
+  required LIB_ROOT + "/tap/editors/"
+
+
+
+
+  # CONFIGURATION
+  
   config_file = File.exist?(user_config = File.expand_path("~/.tap_config")) ? user_config : File.expand_path('config.yaml', __FILE__)
   CONFIG = YAML.load_file(config_file)
   PORT = CONFIG['port'] || 1111
@@ -41,10 +59,6 @@ tap_app = proc {
   
   Signal.trap("INT")  {exit}
   Signal.trap("TERM") {exit}
-  require 'active_support'
-  require 'tap_projects'
-  require 'required'
-  required LIB_ROOT + "/tap/editors/"
 
 
 
@@ -54,16 +68,6 @@ tap_app = proc {
   Thread.abort_on_exception = true
   @server = Thread.new {
     
-    Signal.trap("INT")  {exit}
-    Signal.trap("TERM") {exit}
-
-    puts "loading sinatra..."
-    require 'sinatra/base'
-    require 'haml'
-    require 'sass'
-    require 'action_view'
-    require 'server'
-
     Signal.trap("INT")  {exit}
     Signal.trap("TERM") {exit}
 
@@ -91,7 +95,7 @@ tap_app = proc {
         mtime = File.stat(path).mtime
         current = [path, mtime]
         
-        # Versione shell:
+        # The following equals to this shell code:
         # 
         #   `echo \`date +%s\`: \`pwd\``
         # 
