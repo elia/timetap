@@ -67,7 +67,7 @@ tap_app = proc {
     exit
   }
 
-  class MateError < StandardError
+  class EditorError < StandardError
   end
 
   include Appscript
@@ -79,9 +79,9 @@ tap_app = proc {
         raise(MateError) if mate_isnt_running = `ps -ax -o comm|grep TextMate`.chomp.strip.empty?
         mate = app('TextMate')
         document = mate.document.get
-        raise(MateError) if document.blank?
+        raise(EditorError) if document.blank?
         path = document.first.path.get rescue nil
-        raise(MateError) if path.blank?
+        raise(EditorError) if path.blank?
         mtime = File.stat(path).mtime
         current = [path, mtime]
         
@@ -92,7 +92,7 @@ tap_app = proc {
         history << "#{mtime.to_i}: #{path}\n" unless current == last
         history.flush
         last = [path, mtime]
-      rescue MateError
+      rescue EditorError
         # do nothing
       rescue
         puts Time.now.to_s
