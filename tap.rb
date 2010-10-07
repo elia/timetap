@@ -11,7 +11,7 @@ gem 'rb-appscript'
 gem 'sinatra'
 
 
-$LOAD_PATH.unshift File.expand_path("~/Code/tap")
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__))
 
 if ARGV.include? '-f'
   go_foreground = true
