@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+
+require 'yaml'
+user_config = File.expand_path("~/.tap_config")
+config_file = File.expand_path('../../config.yaml', __FILE__)
+
+options = YAML.load_file(config_file)
+options.merge! YAML.load_file(user_config) if File.exist?(user_config)
+
+
+
+require 'optparse'
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} [options]"
+
+  opts.on("-f", "--foreground", "Run in foreground. (default: false)") do
+    options['foreground'] = true
+  end
+  
+  opts.on("-p", "--port PORT", "Use specified port for server. (default #{options['port']})") do |value|
+    options['port'] = value
+  end
+end.parse!
+
+
+
+require 'time_tap'
+unless options['foreground']
+  require 'time_tap/daemon'
+  
+  pid = fork {
+    # Try to replace "ruby" with "TimeTap" in the command string (for "ps -A" & co.)
+    $0 = 'TimeTap'
+    
+    Process.daemon(true)
+    TimeTap.start(options)
+  }
+else
+  puts "going foreground"
+  TimeTap.start(options)
+end

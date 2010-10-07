@@ -1,61 +1,47 @@
-plist_name = "com.eliaesocietas.TimeTap.plist"
-home = File.expand_path("~")
-ruby = ENV['TAP_RUBY'] || "#{home}/.rvm/bin/ruby-1.9.2-p0@global"
-plist_path = File.expand_path("#{home}/Library/LaunchAgents/#{plist_name}")
+require 'rubygems'
+require 'bundler'
+begin
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
+require 'rake'
 
-desc "Add a plist for OSX's launchd and have *TimeTap* launched automatically at login."
-task :launcher do
-  puts "\nCreating launchd plist in\n  #{plist_path}"
-  
-  File.open(plist_path, 'w') do |file|
-    file << <<-PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>Label</key>
-	<string>com.eliaesocietas.TimeTap</string>
+require 'jeweler'
+Jeweler::Tasks.new do |gem|
+  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+  gem.name = "time_tap"
+  gem.summary = %Q{TODO: one-line summary of your gem}
+  gem.description = %Q{TODO: longer description of your gem}
+  gem.email = "perlelia@gmail.com"
+  gem.homepage = "http://github.com/elia/time_tap"
+  gem.authors = ["Elia Schito"]
+  # Include your dependencies below. Runtime dependencies are required when using your gem,
+  # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
+  #  spec.add_runtime_dependency 'jabber4r', '> 0.1'
+  #  spec.add_development_dependency 'rspec', '> 1.2.3'
+  gem.add_development_dependency "rspec", ">= 2.0.0.beta.19"
+  gem.add_development_dependency "yard", "~> 0.6.0"
+  gem.add_development_dependency "bundler", "~> 1.0.0"
+  gem.add_development_dependency "jeweler", "~> 1.5.0.pre3"
+  gem.add_development_dependency "rcov", ">= 0"
+end
+Jeweler::RubygemsDotOrgTasks.new
 
-	<key>Program</key>
-	<string>#{ruby}</string>
-
-	<key>ProgramArguments</key>
-	<array>
-		<string>#{ruby}</string>
-		<string>#{File.expand_path('../tap.rb', __FILE__)}</string>
-		<string>-f</string>
-	</array>
-
-	<key>OnDemand</key>
-	<false/>
-
-	<key>RunAtLoad</key>
-	<true/>
-</dict>
-</plist>
-    PLIST
-    
-    puts "\nCreated. Now run:\n  launchctl load ~/Library/LaunchAgents\n\n"
-  end
+require 'rspec/core'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
-desc "Restarts the daemon."
-task :restart do
-  command = "launchctl unload #{plist_path}; launchctl load #{plist_path}"
-  puts command
-  exec command
+RSpec::Core::RakeTask.new(:rcov) do |spec|
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
 end
 
-desc "Stops the daemon."
-task :start do
-  command = "launchctl unload #{plist_path}"
-  puts command
-  exec command
-end
+task :default => :spec
 
-desc "Starts the daemon."
-task :start do
-  command = "launchctl load #{plist_path}"
-  puts command
-  exec command
-end
+require 'yard'
+YARD::Rake::YardocTask.new
