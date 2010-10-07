@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
+# add lib dir to path
+$: << File.expand_path(File.dirname(__FILE__) + "/../lib")
+
 require 'yaml'
 user_config = File.expand_path("~/.tap_config")
 config_file = File.expand_path('../../config.yaml', __FILE__)
@@ -22,7 +25,6 @@ OptionParser.new do |opts|
     options['port'] = value
   end
 end.parse!
-
 
 
 require 'time_tap'

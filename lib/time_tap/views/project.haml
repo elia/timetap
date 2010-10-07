@@ -8,17 +8,17 @@
   %b= @project.name.humanize
   %span.tip (#{@project.work_time.to_i / 1.hours} hours)
 
-%p.tip #{@project.pinches.size} pinches, #{time_ago_in_words Time.now - (@project.work_time / @project.days.size / 1.hour).hours} per day in #{@project.days.size} days of work
+%p.tip #{@project.pinches.size} pinches, #{time_ago_in_words (@project.work_time / @project.days.size / 1.hour).from_now} per day in #{@project.days.size} days of work
 
 %table.days
   - current = 0
   - @project.days.to_a.sort_by(&:first).reverse.each do |day, pinches|
-    - time = pinches.map(&:duration).inject(0.seconds, &:+)
+    - time = pinches.map(&:duration).inject(0.seconds, &:+).to_i
     - if time >= 1.minute
       %tr.day
         %td
           %a.day{  :href=> "/project/#{@project.name}/#{current}" } #{( this_year != day.year ? day.strftime("%Y %b %d, %a") : day.strftime("%b %d, %a") )}
         %td
           %span.work{:style => "background-color:green;color:#ccc;overflow:visible;height:1em"}= '&nbsp;' * (time / 5.minutes.to_f)
-          %span.tip= time_ago_in_words Time.now - time
+          %span.tip= time_ago_in_words time.from_now
     - current = current + 1
