@@ -21,5 +21,22 @@ module TimeTap
       end
     end
     
+    class Xcode
+      require 'appscript'
+      include Appscript
+
+      def is_running?
+        app('Xcode').is_running?
+      end
+
+      def current_path
+        xcode = app('Xcode')
+        document = xcode.document.get
+        raise(EditorError) if document.blank?
+        path = document.last.path.get rescue nil
+
+      end
+    end
+
   end
 end
