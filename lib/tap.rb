@@ -12,7 +12,7 @@ gem 'sinatra'
 gem 'required'
 
 
-$LOAD_PATH.unshift File.expand_path("~/Code/tap")
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__))
 
 LIB_ROOT = File.expand_path(File.dirname(__FILE__))
 $LOAD_PATH.unshift( LIB_ROOT + "/tap/" )
