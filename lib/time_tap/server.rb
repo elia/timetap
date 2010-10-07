@@ -4,7 +4,7 @@ require 'sass'
 require 'action_view'
 
 module TimeTap
-  class TapServer < Sinatra::Application
+  class Server < Sinatra::Application
   
     include ActionView::Helpers::DateHelper
     set :haml, { :format        => :html5,
@@ -63,7 +63,7 @@ module TimeTap
     end
   
     get '/mate' do
-      tm_project = File.expand_path("#{CONFIG[:textmate_projects] || 'Development/Current Projects'}/#{File.basename(params[:path])}.tmproj")
+      tm_project = File.expand_path("#{TimeTap.config[:textmate][:projects] || 'Development/Current Projects'}/#{File.basename(params[:path])}.tmproj")
       if File.exist?(tm_project)
         `open "#{tm_project}"`
       else

@@ -12,40 +12,39 @@ gem 'sinatra'
 
 
 module TimeTap
+  attr_accessor :config
+  
+  extend self
+  
+  
+  # CONFIGURATION
+
   # Are we on 1.9?
   # FIXME: this is wrong! :)
   RUBY19 = RUBY_VERSION.to_f >= 1.9
 
-  
-  def self.start
+
+  def start options = {}
     # REQUIREMENTS
   
     require 'yaml'
     require 'active_support'
-    require 'time_tap/projects'
+    require 'time_tap/project'
     require 'time_tap/editors'
     require 'time_tap/watcher'
     require 'time_tap/server'
-  
-  
-  
-  
-    # CONFIGURATION
-  
-    config_file = File.exist?(user_config = File.expand_path("~/.tap_config")) ? user_config : File.expand_path('config.yaml', __FILE__)
-    CONFIG = YAML.load_file(config_file)
-    PORT = CONFIG['port'] || 1111
-    ROOT = CONFIG['root'] || File.expand_path('~')
-  
-  
-  
+    
+    
+    # CONFIG
+    self.config = HashWithIndifferentAccess.new(options)
+    self.config[:root] = File.expand_path(config[:root])
+    self.config[:port] = config[:port].to_i
+    
   
     # SIGNAL HANDLING
   
     Signal.trap("INT")  {exit}
     Signal.trap("TERM") {exit}
-  
-  
   
   
     # WEB SERVER
@@ -56,11 +55,9 @@ module TimeTap
       Signal.trap("INT")  {exit}
       Signal.trap("TERM") {exit}
     
-      Server.run! :host => 'localhost', :port => PORT
+      Server.run! :host => 'localhost', :port => TimeTap.config[:port]
       exit
     }
-  
-  
   
   
     # WATCHER

@@ -8,7 +8,7 @@ module TimeTap
       end
 
       def history_file
-        "#{ROOT}/.tap_history"
+        "#{TimeTap.config[:root]}/.tap_history"
       end
 
       def load_file path
@@ -42,8 +42,8 @@ module TimeTap
         how_nested = 1
 
         regex_suffix = "([^/]+)"
-        if CONFIG["nested_project_layers"] && CONFIG["nested_project_layers"].to_i > 0
-          how_nested =  CONFIG["nested_project_layers"].to_i
+        if TimeTap.config["nested_project_layers"] && TimeTap.config["nested_project_layers"].to_i > 0
+          how_nested =  TimeTap.config["nested_project_layers"].to_i
 
           # nested project layers works "how many folders inside your code folder
           # do you keep projects.
@@ -66,7 +66,7 @@ module TimeTap
           regex_suffix = regex_suffix.join("/")
         end
 
-        res = path.scan(%r{(#{CONFIG["code"] || "Code"})/#{regex_suffix}}).flatten
+        res = path.scan(%r{(#{TimeTap.config[:code] || "Code"})/#{regex_suffix}}).flatten
         mid_path = res[0] # not in a MatchObj group any more, so it's 0 based
         name = res[how_nested]
         mid_path, name = path.scan(%r{#{File.expand_path("~")}/([^/]+)/([^/]+)}).flatten if name.nil?

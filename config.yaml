@@ -1,5 +1,8 @@
-textmate_projects: ~/Development/Current Projects
-root: ~
+root: "~"
 port: 1111
 code: Code
 nested_project_layers: 1
+
+textmate:
+  projects: ~/Development/Current Projects
+
