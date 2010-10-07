@@ -4,8 +4,6 @@ if ARGV.include? '-f'
   ARGV.shift
 end
 
-RUBY19 = RUBY_VERSION.to_f >= 1.9
-
 require 'time_tap'
 
 

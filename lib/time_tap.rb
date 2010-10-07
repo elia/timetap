@@ -12,6 +12,10 @@ gem 'sinatra'
 
 
 module TimeTap
+  # Are we on 1.9?
+  # FIXME: this is wrong! :)
+  RUBY19 = RUBY_VERSION.to_f >= 1.9
+
   
   def self.start
     # REQUIREMENTS
