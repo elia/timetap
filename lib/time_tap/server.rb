@@ -11,7 +11,7 @@ module TimeTap
                  :attr_wrapper  => '"' , 
                  :encoding => RUBY19 ? 'UTF-8' : nil}
     set :root, File.dirname(__FILE__)
-    set :views, Proc.new { File.expand_path File.join(root, "views") }
+    set :views, Proc.new { File.expand_path("../views", __FILE__) }
   
   
     before do
