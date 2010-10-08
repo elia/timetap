@@ -13,10 +13,10 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "time_tap"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Unobtrusive time tracking for TextMate}
+  gem.description = %Q{TimeTap helps you track the time you spend coding on each project while in TextMate.}
   gem.email = "perlelia@gmail.com"
-  gem.homepage = "http://github.com/elia/time_tap"
+  gem.homepage = "http://github.com/elia/timetap"
   gem.authors = ["Elia Schito"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
   # and development dependencies are only needed for development (ie running rake tasks, tests, etc)

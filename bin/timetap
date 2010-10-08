@@ -1,32 +1,45 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
+require 'time_tap'
+
+
 require 'yaml'
 user_config = File.expand_path("~/.tap_config")
 config_file = File.expand_path('../../config.yaml', __FILE__)
 
 options = YAML.load_file(config_file)
 options.merge! YAML.load_file(user_config) if File.exist?(user_config)
-
+TimeTap.config = options
 
 
 require 'optparse'
 OptionParser.new do |opts|
   opts.banner = "Usage: #{$0} [options]"
 
-  opts.on("-f", "--foreground", "Run in foreground. (default: false)") do
-    options['foreground'] = true
+  opts.on("-f", "--foreground", "Run in foreground.") do
+    TimeTap.config[:foreground] = true
   end
   
   opts.on("-p", "--port PORT", "Use specified port for server. (default #{options['port']})") do |value|
-    options['port'] = value
+    TimeTap.config[:port] = value
+  end
+  
+  opts.on("install", "Launch automatically at login.") do
+    TimeTap.install!
+    puts "\nInstalled. Now run:\n  launchctl load ~/Library/LaunchAgents\n\n"
+    exit
+  end
+  
+  opts.on("reload", "Reload login launch agent.") do
+    puts 'Reloading...'
+    TimeTap.reload!
+    exit
   end
 end.parse!
 
 
-
-require 'time_tap'
-unless options['foreground']
+unless TimeTap.config[:foreground]
   require 'time_tap/daemon'
   
   pid = fork {
@@ -34,9 +47,9 @@ unless options['foreground']
     $0 = 'TimeTap'
     
     Process.daemon(true)
-    TimeTap.start(options)
+    TimeTap.start
   }
 else
   puts "going foreground"
-  TimeTap.start(options)
+  TimeTap.start
 end

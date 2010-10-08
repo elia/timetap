@@ -2,7 +2,7 @@ root: "~"
 port: 1111
 code: Code
 nested_project_layers: 1
-
+ruby: /usr/bin/ruby
 textmate:
   projects: ~/Development/Current Projects
 
