@@ -45,3 +45,5 @@ task :default => :spec
 
 require 'yard'
 YARD::Rake::YardocTask.new
+
+require 'time_tap/tasks'
