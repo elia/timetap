@@ -8,16 +8,14 @@ module TimeTap
       include Appscript
 
       def is_running?
-        `ps -ax -o comm|grep TextMate`.chomp.strip
+        app('TextMate').is_running?
       end
 
       def current_path
-        if app('TextMate').is_running?
-          mate = app('TextMate')
-          document = mate.document.get
-          raise(EditorError) if document.blank?
-          path = document.first.path.get rescue nil
-        end
+        mate = app('TextMate')
+        document = mate.document.get
+        raise(EditorError) if document.blank?
+        path = document.first.path.get rescue nil
       end
     end
     
