@@ -7,29 +7,36 @@ module TimeTap
     def keep_watching editor
       last = nil
 
-      # TODO: pick which application the user wants...
-      editor = editor.new
+      editors = Array.new
+      Editors::local_constants.each do |editor|
+        editors.push eval "Editors::#{editor}.new"
+      end
 
-      File.open(File.join(TimeTap.config[:root], ".tap_history"), 'a') do |history|
+      # TODO: pick which application the user wants...
+      #editor = editor.new
+
+      File.open(File.join(TimeTap.config[:root], ".tap_history"), 'a') do |history| 
         loop do
           exit if $stop
           begin
-            raise(Editors::EditorError) unless editor.is_running?
+            editors.each do |editor|
+              raise(EditorError) unless editor.is_running?
 
-            path = editor.current_path
-            raise(Editors::EditorError) if path.blank?
+              path = editor.current_path
+              raise(EditorError) if path.blank?
 
-            mtime = File.stat(path).mtime
-            current = [path, mtime]
+              mtime = File.stat(path).mtime
+              current = [path, mtime]
 
-            # The following equals to this shell code:
-            # 
-            #   `echo \`date +%s\`: \`pwd\``
-            # 
-            history << "#{mtime.to_i}: #{path}\n" unless current == last
-            history.flush
-            last = [path, mtime]
-          rescue Editors::EditorError
+              # The following equals to this shell code:
+              #
+              #   `echo \`date +%s\`: \`pwd\``
+              #
+              history << "#{mtime.to_i}: #{path}\n" unless current == last
+              history.flush
+              last = [path, mtime]
+            end
+          rescue EditorError
             # do nothing
           rescue
             puts Time.now.to_s
