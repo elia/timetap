@@ -5,12 +5,31 @@ GEM
       activesupport (= 2.3.9)
       rack (~> 1.1.0)
     activesupport (2.3.9)
-    haml (3.0.18)
+    diff-lcs (1.1.2)
+    git (1.2.5)
+    haml (3.0.21)
     i18n (0.3.7)
+    jeweler (1.5.0.pre3)
+      bundler (~> 1.0.0)
+      git (>= 1.2.5)
+      rake
     rack (1.1.0)
+    rake (0.8.7)
     rb-appscript (0.5.3)
+    rcov (0.9.9)
+    rspec (2.0.0.rc)
+      rspec-core (= 2.0.0.rc)
+      rspec-expectations (= 2.0.0.rc)
+      rspec-mocks (= 2.0.0.rc)
+    rspec-core (2.0.0.rc)
+    rspec-expectations (2.0.0.rc)
+      diff-lcs (>= 1.1.2)
+    rspec-mocks (2.0.0.rc)
+      rspec-core (= 2.0.0.rc)
+      rspec-expectations (= 2.0.0.rc)
     sinatra (1.0)
       rack (>= 1.0)
+    yard (0.6.1)
 
 PLATFORMS
   ruby
@@ -18,7 +37,12 @@ PLATFORMS
 DEPENDENCIES
   actionpack (~> 2.3.8)
   activesupport (~> 2.3.8)
+  bundler (~> 1.0.0)
   haml
   i18n (~> 0.3.5)
+  jeweler (~> 1.5.0.pre3)
   rb-appscript
+  rcov
+  rspec (>= 2.0.0.beta.19)
   sinatra
+  yard (~> 0.6.0)
