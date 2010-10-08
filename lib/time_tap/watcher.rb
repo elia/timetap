@@ -1,3 +1,5 @@
+require 'time_tap/editor_error'
+
 module TimeTap
   module Watcher
     extend self

@@ -1,7 +1,7 @@
+require 'time_tap/editor_error'
+
 module TimeTap
   module Editors
-    class EditorError < StandardError
-    end
     
     class TextMate
       require 'appscript'
