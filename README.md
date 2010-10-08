@@ -26,7 +26,7 @@ The server will respond on http://0.0.0.0:1111/.
 
 ## Instructions
 
-Run `ruby tap.rb` or run 
+Run `ruby -Ilib bin/timetap` or run 
 `rake launcher && launchctl load ~/Library/LaunchAgents` 
 to add a plist for OSX's launchd and have it launched automatically at login.
 
