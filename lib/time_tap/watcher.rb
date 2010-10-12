@@ -3,17 +3,21 @@ require 'time_tap/editor_error'
 module TimeTap
   module Watcher
     extend self
-    
-    def keep_watching editor
-      last = nil
 
+    # return all the active editors
+    # put this in a function to make testing easier
+    def editors
       editors = Array.new
       Editors::local_constants.each do |editor|
         editors.push eval "Editors::#{editor}.new"
       end
+      editors
+    end
 
-      # TODO: pick which application the user wants...
-      #editor = editor.new
+    def keep_watching editor
+      last = nil
+
+      editors = TimeTap::Watcher.editors
 
       File.open(File.join(TimeTap.config[:root], ".tap_history"), 'a') do |history| 
         loop do
