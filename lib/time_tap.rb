@@ -3,13 +3,12 @@
 
 
 require 'rubygems'
-gem 'activesupport',  '~> 2.3.8'
-gem 'actionpack',     '~> 2.3.8'
-gem 'i18n',           '~> 0.3.5'
+gem 'activesupport',  '> 2.3.8'
+gem 'actionpack',     '> 2.3.8'
+gem 'i18n',           '> 0.3.5'
 gem 'haml'
 gem 'rb-appscript'
 gem 'sinatra'
-
 
 module TimeTap
   attr_accessor :config
@@ -34,6 +33,8 @@ module TimeTap
     require 'time_tap/watcher'
     require 'time_tap/server'
     
+    require 'active_support/hash_with_indifferent_access'
+    require 'active_support/core_ext/numeric/time'
     
     # CONFIG
     self.config = HashWithIndifferentAccess.new(options)
