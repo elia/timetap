@@ -52,7 +52,7 @@ namespace :timetap do
   end
 
   desc "Stops the daemon."
-  task :start do
+  task :stop do
     command = "launchctl unload #{plist_path}"
     puts command
     exec command
