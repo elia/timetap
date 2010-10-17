@@ -25,13 +25,13 @@ OptionParser.new do |opts|
     TimeTap.config[:port] = value
   end
   
-  opts.on("install", "Launch automatically at login.") do
+  opts.on("--install", "Launch automatically at login.") do
     TimeTap.install!
     puts "\nInstalled. Now run:\n  launchctl load ~/Library/LaunchAgents\n\n"
     exit
   end
   
-  opts.on("reload", "Reload login launch agent.") do
+  opts.on("--reload", "Reload login launch agent.") do
     puts 'Reloading...'
     TimeTap.reload!
     exit
