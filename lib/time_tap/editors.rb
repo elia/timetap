@@ -8,7 +8,7 @@ module TimeTap
       include Appscript
 
       def is_running?
-        `ps -ax -o comm|grep TextMate`.chomp.strip
+        not(`ps -ax -o comm|grep TextMate`.chomp.strip.empty?)
       end
 
       def current_path
