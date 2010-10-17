@@ -12,10 +12,10 @@ module TimeTap
         loop do
           exit if $stop
           begin
-            raise(EditorError) unless editor.is_running?
+            raise(Editors::EditorError) unless editor.is_running?
             path = editor.current_path
 
-            raise(EditorError) if path.blank?
+            raise(Editors::EditorError) if path.blank?
             mtime = File.stat(path).mtime
             current = [path, mtime]
 
@@ -26,7 +26,7 @@ module TimeTap
             history << "#{mtime.to_i}: #{path}\n" unless current == last
             history.flush
             last = [path, mtime]
-          rescue EditorError
+          rescue Editors::EditorError
             # do nothing
           rescue
             puts Time.now.to_s
