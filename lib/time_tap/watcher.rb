@@ -9,23 +9,21 @@ module TimeTap
       editor = editor.new
 
       File.open(File.join(TimeTap.config[:root], ".tap_history"), 'a') do |history|
+        history.sync = true
         loop do
           exit if $stop
           begin
-            raise(Editors::EditorError) unless editor.is_running?
-            path = editor.current_path
-
-            raise(Editors::EditorError) if path.blank?
-            mtime = File.stat(path).mtime
-            current = [path, mtime]
-
-            # The following equals to this shell code:
-            # 
-            #   `echo \`date +%s\`: \`pwd\``
-            # 
-            history << "#{mtime.to_i}: #{path}\n" unless current == last
-            history.flush
-            last = [path, mtime]
+            if editor.is_running? && !(path = editor.current_path).blank?
+              mtime = File.stat(path).mtime
+              current = [path, mtime]
+              
+              unless current == last
+                # The following equals to this shell code:
+                #   `echo \`date +%s\`: \`pwd\``
+                history << "#{mtime.to_i}: #{path}\n"
+                last = [path, mtime]
+              end
+            end
           rescue Editors::EditorError
             # do nothing
           rescue
