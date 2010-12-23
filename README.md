@@ -72,7 +72,7 @@ A `nested_project_layers` setting of 2 (in your `.tap_config` file) would mean w
 - support other text editors, or at least make it easy to do so
 - (r)spec it!
 - make it more configurable
-- gemify (with jeweler)
+- <strike>gemify (with jeweler)</strike>
 - flatten encoding quick-fixes with proper solutions (eat and spit only utf8)
 - integration with external (online) time tracking tools
 - export to csv (?)
