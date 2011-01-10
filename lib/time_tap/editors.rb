@@ -12,11 +12,14 @@ module TimeTap
       end
 
       def current_path
-        mate = app('TextMate')
-        document = mate.document.get
-        raise(EditorError) if document.blank?
-        path = document.first.path.get rescue nil
+        if is_running?
+          mate = app('TextMate')
+          document = mate.document.get
+          return nil if document.blank?
+          path = document.first.path.get rescue nil
+        end
       end
+      
     end
     
   end
