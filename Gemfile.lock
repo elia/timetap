@@ -1,3 +1,14 @@
+PATH
+  remote: .
+  specs:
+    time_tap (0.2.0)
+      actionpack (~> 2.3.8)
+      activesupport (~> 2.3.8)
+      haml
+      i18n (~> 0.3.5)
+      rb-appscript
+      sinatra
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -45,4 +56,5 @@ DEPENDENCIES
   rcov
   rspec (>= 2.0.0.beta.19)
   sinatra
+  time_tap!
   yard (~> 0.6.0)
