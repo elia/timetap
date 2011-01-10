@@ -71,7 +71,7 @@ module TimeTap
   end
   
   # Add a plist for OSX's launchd and have *TimeTap* launched automatically at login.
-  def install!
+  def install_launcher!
     load_plist_info!
     ruby        = config[:ruby] || "/usr/bin/ruby"
     include_dir = '-I'+File.expand_path('../../lib', __FILE__)
@@ -110,7 +110,7 @@ module TimeTap
     end
   end
   
-  def reload!
+  def reload_launcher!
     load_plist_info!
     command = "launchctl unload #{plist_path}; launchctl load #{plist_path}"
     exec command

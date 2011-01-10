@@ -26,10 +26,12 @@ OptionParser.new do |opts|
   end
   
   opts.on("-i", "--install", "Sets TimeTap to be launched automatically at login, and boots it.") do
-    puts 'Installing...'
-    TimeTap.install!
-    puts 'Reloading...'
-    TimeTap.reload!
+    puts 'Installing launcher...'
+    TimeTap.install_launcher!
+    
+    puts 'Reloading system launcher...'
+    TimeTap.reload_launcher!
+    
     exit
   end
 end.parse!
