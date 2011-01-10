@@ -24,7 +24,7 @@ module TimeTap
                 last = [path, mtime]
               end
             end
-          rescue Editors::EditorError
+          rescue ::TimeTap::Editors::EditorError
             # do nothing
           rescue
             puts Time.now.to_s
