@@ -29,10 +29,16 @@ OptionParser.new do |opts|
     puts 'Installing launcher...'
     TimeTap.install_launcher!
     
+    unless File.exist? user_config
+      require 'fileutils'
+      puts 'Copying example config file to ~/.tap_config...'
+      FileUtils.cp config_file, user_config
+    end
+    
     puts 'Reloading system launcher...'
     TimeTap.reload_launcher!
     
-    exit
+    exit # TimeTap::reload_launcher! uses `exec` so this is never actually ran
   end
 end.parse!
 
