@@ -20,14 +20,14 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.extra_rdoc_files = %w[LICENSE README.md]
   
-  gem.add_runtime_dependency 'activesupport',  '~> 2.3.8'
-  gem.add_runtime_dependency 'actionpack',     '~> 2.3.8'
-  gem.add_runtime_dependency 'i18n',           '~> 0.3.5'
-  gem.add_runtime_dependency 'haml',           '< 2.0'
-  gem.add_runtime_dependency 'rb-appscript'
-  gem.add_runtime_dependency 'sinatra',        '~> 1.0'
+  s.add_runtime_dependency 'sinatra',        '~> 1.0'
+  s.add_runtime_dependency 'actionpack',     '~> 2.3.8'
+  s.add_runtime_dependency 'activesupport',  '~> 2.3.8'
+  s.add_runtime_dependency 'i18n',           '~> 0.3.5'
+  s.add_runtime_dependency 'haml'
+  s.add_runtime_dependency 'rb-appscript'
 
-  gem.add_development_dependency 'yard'
-  gem.add_development_dependency 'rspec',   '~> 2.0'
-  gem.add_development_dependency 'bundler', '~> 1.0.0'
+  s.add_development_dependency 'yard'
+  s.add_development_dependency 'rspec',   '~> 2.0'
+  s.add_development_dependency 'bundler', '~> 1.0.0'
 end
