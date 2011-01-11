@@ -7,7 +7,7 @@ inventing some arbitrary amount of time to fill your fancy time tracker.
 
 ## Installation
 
-    gem install timetap
+    gem install time_tap
     
     timetap --install
     
