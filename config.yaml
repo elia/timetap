@@ -1,8 +1,18 @@
 root: "~"
-port: 1111
+# root is where the logs will be saved
+
 code: Code
+# code is where all your projects live
+
 nested_project_layers: 1
+# see below about nested projects
+
+port: 1111
+# the port on localhost for the web interface
+
 ruby: /usr/bin/ruby
+# the ruby you want to use
+
 textmate:
   projects: ~/Development/Current Projects
-
+  # where you keep your .tmproj files

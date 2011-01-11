@@ -48,41 +48,54 @@ TimeTap uses a config file to control where projects are kept, etc. the path is:
     ~/.tap_config
 
 Which can look like this:
-
-  root: "~"
-  port: 1111
-  code: Code
-  nested_project_layers: 1
-  ruby: /usr/bin/ruby
-  textmate:
-    projects: ~/Development/Current Projects
-
-
-
-### Configuration File Keys Explained
-
-    root - where the TimeTap logs should be saved. Recommended value: ~
-    code - where all you project live, in a flat hierachy. 
-    nested_project_layers - see below, on nested projects. Default is 1
     
+    root: "~"
+    # root is where the logs will be saved
+    
+    code: Code
+    # code is where all your projects live
+    
+    nested_project_layers: 1
+    # see below about nested projects
+    
+    port: 1111
+    # the port on localhost for the web interface
+    
+    ruby: /usr/bin/ruby
+    # the ruby you want to use
+    
+    textmate:
+      projects: ~/Development/Current Projects
+      # where you keep your .tmproj files
 
-Nested Projects allows you to keep your projects inside a hierarchy, instead of the original assumption of TimeTap (which is that all projects are flat).
 
-For example, you could keep your directory structure might look like:
+
+### About "nested project layers"
+
+TimeTap assumes you keep your projects inside a specific folder, like this:
+
+    ~/Code/
+      tap/
+      tik_tak/
+      tk-win/
+      AcmeCorp/
+        website/
+        intranet/
+        
+But if you keep your projects grouped in subfolders like this:
 
     ~/Code/
       Clients/
         AcmeCorp/
           website/
-            intranet
+          intranet/
         BetaCorp/
           skunkworks/
       OpenSource/
         project_one/
         timetap/
 
-A `nested_project_layers` setting of 2 (in your `.tap_config` file) would mean we track "AcmeCorp", "BetaCorp", and everything under OpenSource, as their own projects
-    
+then, the `nested_project_layers` key tells TimeTap how deep to look for project names inside a hierarchy (in the example a value of 2 will catch `AcmeCorp`, `BetaCorp`, `project_one` and `timetap`).
 
 
 ## How to Contribute
@@ -106,10 +119,10 @@ to add a plist for OSX's launchd and have it launched automatically at login.
 
 ### TODO
 
-- support other text editors, or at least make it easy to do so
-- (r)spec it!
 - <strike>make it more configurable</strike>
 - <strike>gemify (with jeweler)</strike>
+- support other text editors, or at least make it easy to do so
+- (r)spec it!
 - flatten encoding quick-fixes with proper solutions (eat and spit only utf8)
 - integration with external (online) time tracking tools
 - export to csv (?)
