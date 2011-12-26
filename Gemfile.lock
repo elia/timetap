@@ -1,60 +1,59 @@
+GIT
+  remote: https://github.com/elia/rspec-rails-watchr
+  revision: b8fe24ee226961fb4d10786b06f8c287e641d513
+  branch: spectator
+  specs:
+    spectator (1.0.2)
+      notify
+      rb-fsevent
+      term-ansicolor
+
 PATH
   remote: .
   specs:
-    time_tap (0.2.0)
+    time_tap (0.3.0)
       actionpack (~> 2.3.8)
       activesupport (~> 2.3.8)
       haml
       i18n (~> 0.3.5)
       rb-appscript
-      sinatra
+      sinatra (~> 1.0)
 
 GEM
   remote: http://rubygems.org/
   specs:
-    actionpack (2.3.9)
-      activesupport (= 2.3.9)
+    actionpack (2.3.14)
+      activesupport (= 2.3.14)
       rack (~> 1.1.0)
-    activesupport (2.3.9)
-    diff-lcs (1.1.2)
-    git (1.2.5)
-    haml (3.0.21)
+    activesupport (2.3.14)
+    diff-lcs (1.1.3)
+    haml (3.1.4)
     i18n (0.3.7)
-    jeweler (1.5.0.pre3)
-      bundler (~> 1.0.0)
-      git (>= 1.2.5)
-      rake
-    rack (1.1.0)
-    rake (0.8.7)
-    rb-appscript (0.5.3)
-    rcov (0.9.9)
-    rspec (2.0.0.rc)
-      rspec-core (= 2.0.0.rc)
-      rspec-expectations (= 2.0.0.rc)
-      rspec-mocks (= 2.0.0.rc)
-    rspec-core (2.0.0.rc)
-    rspec-expectations (2.0.0.rc)
-      diff-lcs (>= 1.1.2)
-    rspec-mocks (2.0.0.rc)
-      rspec-core (= 2.0.0.rc)
-      rspec-expectations (= 2.0.0.rc)
-    sinatra (1.0)
-      rack (>= 1.0)
+    notify (0.3.0)
+    rack (1.1.2)
+    rb-appscript (0.6.1)
+    rb-fsevent (0.4.3.1)
+    rspec (2.7.0)
+      rspec-core (~> 2.7.0)
+      rspec-expectations (~> 2.7.0)
+      rspec-mocks (~> 2.7.0)
+    rspec-core (2.7.1)
+    rspec-expectations (2.7.0)
+      diff-lcs (~> 1.1.2)
+    rspec-mocks (2.7.0)
+    sinatra (1.2.7)
+      rack (~> 1.1)
+      tilt (>= 1.2.2, < 2.0)
+    term-ansicolor (1.0.7)
+    tilt (1.3.3)
     yard (0.6.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionpack (~> 2.3.8)
-  activesupport (~> 2.3.8)
-  bundler (~> 1.0.0)
-  haml
-  i18n (~> 0.3.5)
-  jeweler (~> 1.5.0.pre3)
-  rb-appscript
-  rcov
-  rspec (>= 2.0.0.beta.19)
-  sinatra
+  bundler (~> 1.0)
+  rspec (~> 2.0)
+  spectator!
   time_tap!
-  yard (~> 0.6.0)
+  yard

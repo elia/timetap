@@ -25,9 +25,11 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'activesupport',  '~> 2.3.8'
   s.add_runtime_dependency 'i18n',           '~> 0.3.5'
   s.add_runtime_dependency 'haml'
+  s.add_runtime_dependency 'sass'
   s.add_runtime_dependency 'rb-appscript'
 
   s.add_development_dependency 'yard'
   s.add_development_dependency 'rspec',   '~> 2.0'
-  s.add_development_dependency 'bundler', '~> 1.0.0'
+  s.add_development_dependency 'bundler', '~> 1.0'
+  s.add_development_dependency 'spectator', '~> 1.1.a'
 end
