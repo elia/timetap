@@ -17,8 +17,12 @@ require 'optparse'
 OptionParser.new do |opts|
   opts.banner = "Usage: #{$0} [options]"
 
-  opts.on("-f", "--foreground", "Run in foreground.") do
-    TimeTap.config[:foreground] = true
+  opts.on("-f", "--foreground", "Run in foreground (default).") do
+    TimeTap.config[:background] = false
+  end
+  
+  opts.on("-b", "--background", "Run in background.") do
+    TimeTap.config[:background] = true
   end
   
   opts.on("-p", "--port PORT", "Use specified port for server. (default #{options['port']})") do |value|
@@ -42,8 +46,8 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-
-unless TimeTap.config[:foreground]
+TimeTap.config[:foreground] = !TimeTap.config[:background]
+if TimeTap.config[:background]
   require 'time_tap/daemon'
   
   pid = fork {
