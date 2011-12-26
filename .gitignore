@@ -5,3 +5,4 @@ doc
 pkg/*
 *.gem
 .bundle
+.sass*
