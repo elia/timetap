@@ -21,9 +21,8 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w[LICENSE README.md]
   
   s.add_runtime_dependency 'sinatra',        '~> 1.0'
-  s.add_runtime_dependency 'actionpack',     '~> 2.3.8'
-  s.add_runtime_dependency 'activesupport',  '~> 2.3.8'
-  s.add_runtime_dependency 'i18n',           '~> 0.3.5'
+  s.add_runtime_dependency 'actionpack',     '~> 3.1.0'
+  s.add_runtime_dependency 'activesupport',  '~> 3.1.0'
   s.add_runtime_dependency 'haml'
   s.add_runtime_dependency 'sass'
   s.add_runtime_dependency 'rb-appscript'
