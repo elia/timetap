@@ -1,13 +1,3 @@
-GIT
-  remote: https://github.com/elia/rspec-rails-watchr
-  revision: b8fe24ee226961fb4d10786b06f8c287e641d513
-  branch: spectator
-  specs:
-    spectator (1.0.2)
-      notify
-      rb-fsevent
-      term-ansicolor
-
 PATH
   remote: .
   specs:
@@ -44,6 +34,10 @@ GEM
     sinatra (1.2.7)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
+    spectator (1.1.a)
+      notify
+      rb-fsevent
+      term-ansicolor
     term-ansicolor (1.0.7)
     tilt (1.3.3)
     yard (0.6.1)
@@ -54,6 +48,6 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0)
   rspec (~> 2.0)
-  spectator!
+  spectator (~> 1.1.a)
   time_tap!
   yard
