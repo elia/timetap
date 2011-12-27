@@ -28,8 +28,8 @@ class TimeTap::Backend::FileSystem
     end
   end
   
-  def register path, mtime
-    append_to_file "#{mtime.to_i}: #{path}\n"
+  def register time, path
+    append_to_file "#{time.to_i}: #{path}\n"
   end
   
   def load_data

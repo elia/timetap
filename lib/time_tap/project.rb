@@ -22,12 +22,16 @@ class TimeTap::Project
   class << self
     def all
       backend.load_data.each do |time, path|
-        project = self[path]
-        project << time if project
+        register time, path
       end if projects.empty?
       projects.values
     end
-
+    
+    def register time, path
+      project = self[path]
+      project << time if project
+    end
+    
     def find name
       projects[name.underscore.downcase]
     end
@@ -69,7 +73,7 @@ class TimeTap::Project
         name.chomp!
         key = name.underscore.downcase
         if projects[key].nil?
-          project = Project.new mid_path, name
+          project = new mid_path, name
           projects[key] = project
         end
         projects[key]

@@ -1,3 +1,5 @@
+require 'time_tap/project'
+
 class TimeTap::Watcher
   attr_reader :editor, :backend
   def initialize editor, backend
@@ -20,7 +22,7 @@ class TimeTap::Watcher
         logger.error "#{$!}\n#{$!.backtrace.join("\n")}"
         raise if $!.kind_of?(SignalException)
       end
-        
+      
       break if $stop
       sleep 30
     end
@@ -29,16 +31,17 @@ class TimeTap::Watcher
   
   def watch! last = nil
     path = editor.current_path
+    
     if path
       mtime = File.mtime(path)
-      current = [path, mtime]
+      current = [mtime, path]
               
       unless current == last
         backend.register *current
-        last = [path, mtime]
+        TimeTap::Project.register *current
+        last = current
       end
     end
   end
-    
     
 end
