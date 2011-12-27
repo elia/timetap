@@ -54,6 +54,6 @@ if TimeTap.config[:background]
     TimeTap.start
   }
 else
-  puts "going foreground"
+  puts '[TimeTap] Going foreground...'
   TimeTap.start
 end
