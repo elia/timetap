@@ -99,7 +99,8 @@ module TimeTap
   
     # WATCHER
   
-    Watcher.keep_watching(editor)
+    watcher = Watcher.new(editor, backend)
+    watcher.keep_watching
   end
   
   
