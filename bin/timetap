@@ -5,12 +5,8 @@ require 'time_tap'
 
 
 require 'yaml'
-user_config = File.expand_path("~/.tap_config")
-config_file = File.expand_path('../../config.yaml', __FILE__)
-
-options = YAML.load_file(config_file)
-options.merge! YAML.load_file(user_config) if File.exist?(user_config)
-TimeTap.config = options
+user_config = File.expand_path('~/.timetap.config')
+TimeTap.config.merge! YAML.load_file(user_config) if File.exist?(user_config)
 
 
 require 'optparse'
@@ -25,7 +21,7 @@ OptionParser.new do |opts|
     TimeTap.config[:background] = true
   end
   
-  opts.on("-p", "--port PORT", "Use specified port for server. (default #{options['port']})") do |value|
+  opts.on("-p", "--port PORT", "Use specified port for server. (default #{TimeTap.config['port']})") do |value|
     TimeTap.config[:port] = value
   end
   

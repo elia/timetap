@@ -2,7 +2,32 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'logger'
 
 module TimeTap
-  @config = {}
+  @config = {
+    :root => "~",
+    # root is where the logs will be saved
+
+    :code => 'Code',
+    # code is where all your projects live
+
+    :nested_project_layers => 1,
+    # see below about nested projects
+
+    :port => 1111,
+    # the port on localhost for the web interface
+
+    :ruby => '/usr/bin/ruby',
+    # the ruby you want to use
+
+    :textmate => {
+      # where you keep your .tmproj files
+      :projects => '~/Development/Current Projects'
+    },
+    
+    :backend         => :file_system,
+    :backend_options => { :file_name => '~/.timetap.history' },
+    :editor          => :text_mate,
+    :log_file        => '~/.timetap.log'
+  }
   attr_accessor :config
   
   extend self
@@ -23,16 +48,7 @@ module TimeTap
     @config[:port] = config[:port].to_i
   end
   
-  def set_deafult_config
-    # DEFAULT CONFIG
-    config[:backend]         ||= :file_system
-    config[:backend_options] ||= { :file_name => '~/.timetap_history' }
-    config[:editor]          ||= :text_mate
-    config[:log_file]        ||= '~/.timetap.log'
-  end
-  
   def logger
-    set_deafult_config
     @logger ||= Logger.new(File.expand_path( config[:log_file] ))
   end
   
@@ -40,15 +56,11 @@ module TimeTap
   # BACKEND
     
   def backend
-    set_deafult_config
-    
     require 'time_tap/backend'
     @backend = Backend.load config[:backend], config[:backend_options]
   end
   
   def editor
-    set_deafult_config
-    
     require 'time_tap/editor'
     @backend = Editor.load config[:editor], config[:editor_options]
   end
@@ -57,8 +69,6 @@ module TimeTap
   # START
   
   def start options = {}
-    set_deafult_config
-    
     # REQUIREMENTS
   
     require 'yaml'
