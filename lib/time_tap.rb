@@ -1,17 +1,8 @@
-#!/usr/bin/env ruby
-# encoding: utf-8
-
-
-require 'rubygems'
-gem 'activesupport',  '~> 2.3.8'
-gem 'actionpack',     '~> 2.3.8'
-gem 'i18n',           '~> 0.3.5'
-gem 'haml'
-gem 'rb-appscript'
-gem 'sinatra'
-
+require 'active_support/core_ext/hash/indifferent_access'
+require 'logger'
 
 module TimeTap
+  @config = {}
   attr_accessor :config
   
   extend self
@@ -32,21 +23,53 @@ module TimeTap
     @config[:port] = config[:port].to_i
   end
   
+  def set_deafult_config
+    # DEFAULT CONFIG
+    config[:backend]         ||= :file_system
+    config[:backend_options] ||= { :file_name => '~/.timetap_history' }
+    config[:editor]          ||= :text_mate
+    config[:log_file]        ||= '~/.timetap.log'
+  end
+  
+  def logger
+    set_deafult_config
+    @logger ||= Logger.new(File.expand_path( config[:log_file] ))
+  end
+  
+  
+  # BACKEND
+    
+  def backend
+    set_deafult_config
+    
+    require 'time_tap/backend'
+    @backend = Backend.load config[:backend], config[:backend_options]
+  end
+  
+  def editor
+    set_deafult_config
+    
+    require 'time_tap/editor'
+    @backend = Editor.load config[:editor], config[:editor_options]
+  end
+    
+  
+  # START
   
   def start options = {}
+    set_deafult_config
+    
     # REQUIREMENTS
   
     require 'yaml'
     require 'active_support'
     require 'time_tap/project'
-    require 'time_tap/editors'
     require 'time_tap/watcher'
     require 'time_tap/server'
     
     
-  
     # SIGNAL HANDLING
-  
+    
     Signal.trap("INT")  {exit}
     Signal.trap("TERM") {exit}
   
@@ -66,9 +89,9 @@ module TimeTap
   
     # WATCHER
   
-    include Editors
-    Watcher.keep_watching(TextMate)
+    Watcher.keep_watching(editor)
   end
+  
   
   # Add a plist for OSX's launchd and have *TimeTap* launched automatically at login.
   def install_launcher!

@@ -1,49 +1,44 @@
-module TimeTap
-  module Watcher
-    extend self
+class TimeTap::Watcher
+  attr_reader :editor, :backend
+  def initialize editor, backend
+    @editor, @backend = editor, backend
+  end
     
-    def keep_watching editor
-      last = nil
+  def logger
+    TimeTap.logger
+  end
+    
+  def keep_watching
+    last = nil
 
-      # TODO: pick which application the user wants...
-      editor = editor.new
-
-      File.open(File.join(TimeTap.config[:root], ".tap_history"), 'a') do |history|
-        history.sync = true
-        loop do
-          exit if $stop
-          begin
-            if editor.is_running? && !(path = editor.current_path).blank?
-              mtime = File.stat(path).mtime
-              current = [path, mtime]
+    loop do
+      break if $stop
+        
+      begin
+        last = watch!(last)
+      rescue
+        logger.error "#{$!}\n#{$!.backtrace.join("\n")}"
+        raise if $!.kind_of?(SignalException)
+      end
+        
+      break if $stop
+      sleep 30
+    end
+  end
+  
+  
+  def watch! last = nil
+    path = editor.current_path
+    if path
+      mtime = File.mtime(path)
+      current = [path, mtime]
               
-              unless current == last
-                # The following equals to this shell code:
-                #   `echo \`date +%s\`: \`pwd\``
-                history << "#{mtime.to_i}: #{path}\n"
-                last = [path, mtime]
-              end
-            end
-          rescue ::TimeTap::Editors::EditorError
-            # do nothing
-          rescue
-            puts Time.now.to_s
-            puts $!.to_s
-            puts $!.backtrace.join("\n")
-
-            File.open(File.join(TimeTap.config[:root], ".tap_errors"), "w") do |file|
-              file.puts Time.now.to_s
-              file.puts $!.to_s
-              file.puts $!.backtrace.join("\n")
-            end
-
-            raise if $!.kind_of?(SignalException)
-          end
-          sleep 30
-        end
+      unless current == last
+        backend.register *current
+        last = [path, mtime]
       end
     end
-    
-    
   end
+    
+    
 end

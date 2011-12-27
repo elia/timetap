@@ -1,7 +1,9 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require 'spec_helper'
+require 'time_tap'
 
-describe "TimeTap" do
-  it "fails" do
-    fail "hey buddy, you should probably rename this file and start specing for real"
+describe TimeTap do
+  it 'prepares the backend from the config' do
+    TimeTap.config[:backend] = :file_system
+    TimeTap.backend.should be_a(TimeTap::Backend::FileSystem)
   end
 end
