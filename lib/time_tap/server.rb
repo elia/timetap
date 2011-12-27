@@ -16,7 +16,7 @@ module TimeTap
   
     before do
       content_type "text/html", :charset => "utf-8"
-      Project.load_file('~/.tap_history')
+      # Project.load_file('~/.tap_history')
     end
   
   
