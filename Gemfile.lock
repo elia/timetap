@@ -58,7 +58,7 @@ GEM
     sinatra (1.2.7)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
-    spectator (1.1.a)
+    spectator (1.1.a2)
       notify
       rb-fsevent
       term-ansicolor
@@ -75,5 +75,5 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0)
   rspec (~> 2.0)
-  spectator (~> 1.1.a)
+  spectator (~> 1.1.a2)
   time_tap!
