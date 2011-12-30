@@ -4,6 +4,7 @@ class TimeTap::Watcher
   attr_reader :editor, :backend
   def initialize editor, backend
     @editor, @backend = editor, backend
+    logger.info "new watcher #{[editor, backend].inspect}"
   end
     
   def logger
@@ -15,7 +16,8 @@ class TimeTap::Watcher
 
     loop do
       break if $stop
-        
+      logger.info "[TimeTap] checking current_path..."
+      
       begin
         last = watch!(last)
       rescue
@@ -32,13 +34,16 @@ class TimeTap::Watcher
   def watch! last = nil
     path = editor.current_path
     
-    if path
-      mtime = File.mtime(path)
+    if path and File.exist? path
+      logger.info "[TimeTap::Watcher] path: #{path.inspect}"
+      mtime = File.mtime(path).to_i
       current = [mtime, path]
-              
-      unless current == last
+      logger.info "[TimeTap::Watcher] checking entry (#{current == last}): \n#{current.inspect} == \n#{last.inspect}"
+      
+      if current != last
         backend.register *current
         TimeTap::Project.register *current
+        TimeTap.logger.info "[TimeTap::Watcher] registered: #{current.inspect}"
         last = current
       end
     end

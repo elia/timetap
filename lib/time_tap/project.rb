@@ -15,21 +15,34 @@ class TimeTap::Project
     attr_reader :backend
   end
 
+  def logger
+    TimeTap.logger
+  end
 
 
 
 
   class << self
+    def logger
+      TimeTap.logger
+    end
+    
     def all
-      backend.load_data.each do |time, path|
+      backend.each_entry do |time, path|
         register time, path
-      end if projects.empty?
+      end unless @loaded
+      @loaded = true
       projects.values
     end
     
     def register time, path
       project = self[path]
-      project << time if project
+      if project
+        project << time
+        logger.info "[TimeTap::Project] added #{time} to project #{project.name} (#{project})"
+      else
+        logger.info "[TimeTap::Project] skipping #{time}, no project"
+      end
     end
     
     def find name
@@ -37,6 +50,7 @@ class TimeTap::Project
     end
 
     def [] path
+      return if path.nil? or path.empty?
       path = File.expand_path(path)
       how_nested = 1
 

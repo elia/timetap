@@ -27,8 +27,13 @@ module TimeTap
     :backend_options => { :file_name => '~/.timetap.history' },
     :editor          => :text_mate,
     :log_file        => '~/.timetap.log'
-  }
+  }.with_indifferent_access
   attr_accessor :config
+  
+  
+  attr_accessor :logger
+  
+  
   
   extend self
   
@@ -48,9 +53,6 @@ module TimeTap
     @config[:port] = config[:port].to_i
   end
   
-  def logger
-    @logger ||= Logger.new(File.expand_path( config[:log_file] ))
-  end
   
   
   # BACKEND
@@ -72,12 +74,13 @@ module TimeTap
     # REQUIREMENTS
   
     require 'yaml'
-    require 'active_support'
     require 'time_tap/project'
     require 'time_tap/watcher'
     require 'time_tap/server'
     
+    @logger ||= Logger.new($stdout)
     
+    logger.info "[TimeTap] config: #{config.to_yaml}"
     # SIGNAL HANDLING
     
     Signal.trap('INT')  {exit}
