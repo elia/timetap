@@ -80,14 +80,14 @@ module TimeTap
     
     # SIGNAL HANDLING
     
-    Signal.trap("INT")  {exit}
-    Signal.trap("TERM") {exit}
+    Signal.trap('INT')  {exit}
+    Signal.trap('TERM') {exit}
   
   
     # WEB SERVER
-  
+      
     Thread.abort_on_exception = true
-  
+      
     @server = Thread.new {
       Signal.trap("INT")  {exit}
       Signal.trap("TERM") {exit}
@@ -96,7 +96,7 @@ module TimeTap
       exit
     }
   
-  
+    
     # WATCHER
   
     watcher = Watcher.new(editor, backend)
