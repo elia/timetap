@@ -8,7 +8,11 @@ module TimeTap
 
     :code => 'Code',
     # code is where all your projects live
-
+    :code_folders => [
+      '~/Code/Mikamai', 
+      '~/Code'
+    ],
+    
     :nested_project_layers => 1,
     # see below about nested projects
 

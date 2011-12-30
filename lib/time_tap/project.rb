@@ -55,34 +55,20 @@ class TimeTap::Project
       how_nested = 1
 
       regex_suffix = "([^/]+)"
-      if TimeTap.config["nested_project_layers"] && TimeTap.config["nested_project_layers"].to_i > 0
-        how_nested =  TimeTap.config["nested_project_layers"].to_i
-
-        # nested project layers works "how many folders inside your code folder
-        # do you keep projects.
-        #
-        # For example, if your directory structure looks like:
-        # ~/Code/
-        #    Clients/
-        #        AcmeCorp/
-        #            website/
-        #            intranet
-        #        BetaCorp/
-        #           skunkworks/
-        #    OpenSource/
-        #        project_one/
-        #        timetap/
-        #
-        # A nested_project_layers setting of 2 would mean we track "AcmeCorp", "BetaCorp", and everything
-        # under OpenSource, as their own projects
-        regex_suffix = [regex_suffix] * how_nested
-        regex_suffix = regex_suffix.join("/")
-      end
-
-      res = path.scan(%r{(#{TimeTap.config[:code] || "Code"})/#{regex_suffix}}).flatten
+      
+      folders = TimeTap.config[:code_folders].map do |folder|
+        folder = File.expand_path(folder)
+        folder = Dir[folder]
+      end.flatten
+      
+      folders_regex = folders.map{|f| Regexp.escape f}.join('|')
+      res = path.scan(%r{(#{folders_regex})/#{regex_suffix}}).flatten
+      
+      # res = path.scan(%r{(#{TimeTap.config[:code] || "Code"})/#{regex_suffix}}).flatten
       mid_path = res[0] # not in a MatchObj group any more, so it's 0 based
       name = res[how_nested]
       mid_path, name = path.scan(%r{#{File.expand_path("~")}/([^/]+)/([^/]+)}).flatten if name.nil?
+      
       if name
         name.chomp!
         key = name.underscore.downcase
