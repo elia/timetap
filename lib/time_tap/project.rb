@@ -5,15 +5,18 @@ class TimeTap::Project
     
   # CONFIG
     
-  @pause_limit = 30.minutes
-  @projects = HashWithIndifferentAccess.new
-  @backend = TimeTap.backend
-    
   class << self
     attr_accessor :pause_limit
     attr_reader :projects
     attr_reader :backend
+    
+    def reload!
+      @pause_limit = 30.minutes
+      @projects = {}.with_indifferent_access
+      @backend = TimeTap.backend
+    end
   end
+  reload!
 
   def logger
     TimeTap.logger
