@@ -9,17 +9,19 @@ class TimeTap::Backend::FileSystem
   end
   
   def append_to_file content
-    File.open(file_name).tap do |f|
+    File.open(file_name, 'a').tap do |f|
       f.sync = true
       f << content
     end
   end
   
   def ruby19?
-    RUBY_VERSION < '1.9'
+    RUBY_VERSION >= '1.9'
   end
   
   def each_entry
+    return [] unless File.exists? file_name
+    
     File.open(file_name, 'r', ruby19? ? {:external_encoding => 'utf-8'} : nil) do |file|
       file.each_line do |line|
         time, path = line.split(": ")
@@ -31,12 +33,4 @@ class TimeTap::Backend::FileSystem
   def register time, path
     append_to_file "#{time.to_i}: #{path}\n"
   end
-  
-  def load_data
-    each_entry do |time, path|
-      project = self[path]
-      project << time if project
-    end
-  end
-  
 end
