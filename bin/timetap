@@ -25,6 +25,10 @@ OptionParser.new do |opts|
     TimeTap.config[:port] = value
   end
   
+  opts.on("-l", "--log-level LEVEL", "Use specified port for server. (default #{TimeTap.config['port']})") do |value|
+    TimeTap.config[:log_level] = value
+  end
+  
   opts.on("-i", "--install", "Sets TimeTap to be launched automatically at login, and boots it.") do
     puts 'Installing launcher...'
     TimeTap.install_launcher!
@@ -54,6 +58,8 @@ if TimeTap.config[:background]
     TimeTap.start
   }
 else
-  puts '[TimeTap] Going foreground...'
+  TimeTap.logger = Logger.new($stdout)
+  TimeTap.logger.level = Logger.const_get(TimeTap.config[:log_level].upcase) if TimeTap.config[:log_level]
+  TimeTap.logger.info '[TimeTap] Going foreground...'
   TimeTap.start
 end
