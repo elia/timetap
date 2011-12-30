@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sass'
   s.add_runtime_dependency 'rb-appscript'
 
-  s.add_development_dependency 'yard'
   s.add_development_dependency 'rspec',   '~> 2.0'
   s.add_development_dependency 'bundler', '~> 1.0'
   s.add_development_dependency 'spectator', '~> 1.1.a'
