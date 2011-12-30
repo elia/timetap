@@ -10,6 +10,7 @@
 %h2
   Detailed View For:
   %b=( this_year != @current_day.year ? @current_day.strftime("%Y %b %d, %a") : @current_day.strftime("%b %d, %a") )
+  %span.tip (#{"%.2f" % (@pinches.sum(&:duration).to_i / 1.hours.to_f).to_s} hours)
 
 %table.pinches
   %tr

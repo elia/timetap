@@ -13,12 +13,14 @@
 %table.days
   - current = 0
   - @project.days.to_a.sort_by(&:first).reverse.each do |day, pinches|
-    - time = pinches.map(&:duration).inject(0.seconds, &:+)
+    - time = pinches.sum(&:duration)
     - if time >= 1.minute
       %tr.day
         %td
-          %a.day{  :href=> "/project/#{@project.name}/#{current}" } #{( this_year != day.year ? day.strftime("%Y %b %d, %a") : day.strftime("%b %d, %a") )}
+          %a.day{:href => "/project/#{@project.name}/#{current}"} #{( this_year != day.year ? day.strftime("%Y %b %d, %a") : day.strftime("%b %d, %a") )}
         %td
           %span.work{:style => "background-color:green;color:#ccc;overflow:visible;height:1em"}= '&nbsp;' * (time / 5.minutes.to_f)
-          %span.tip= time_ago_in_words Time.now - time
+          %b= time_ago_in_words Time.now - time
+        %td
+          %span.tip= "#{'%.2f' % (time / 1.hour.to_f)} hours"
     - current = current + 1
