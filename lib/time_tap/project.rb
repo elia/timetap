@@ -19,7 +19,7 @@ class TimeTap::Project
   reload!
 
   def logger
-    TimeTap.logger
+    self.class.logger
   end
 
 
@@ -104,7 +104,7 @@ class TimeTap::Project
   attr_reader :name, :path, :pinches
     
   def work_time
-    pinches.map(&:duration).inject(0.seconds, &:+)
+    pinches.sum(&:duration)
   end
 
   def days
