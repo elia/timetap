@@ -7,7 +7,18 @@ class TimeTap::Project
     
   class << self
     attr_accessor :pause_limit
-    attr_reader :projects
+    def load_projects
+      @loading ||= Thread.new do
+        backend.each_entry do |time, path|
+          register time, path
+        end
+      end
+    end
+    
+    def projects
+      load_projects
+      @projects
+    end
     attr_reader :backend
     
     def reload!
@@ -31,10 +42,6 @@ class TimeTap::Project
     end
     
     def all
-      backend.each_entry do |time, path|
-        register time, path
-      end unless @loaded
-      @loaded = true
       projects.values
     end
     
