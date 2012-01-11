@@ -35,8 +35,8 @@ module TimeTap
   attr_accessor :config
   
   
+  @logger = Logger.new($stdout)
   attr_accessor :logger
-  
   
   
   extend self
@@ -81,8 +81,6 @@ module TimeTap
     require 'time_tap/project'
     require 'time_tap/watcher'
     require 'time_tap/server'
-    
-    @logger ||= Logger.new($stdout)
     
     logger.info "[TimeTap] config: #{config.to_yaml}"
     # SIGNAL HANDLING
