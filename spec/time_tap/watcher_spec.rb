@@ -7,7 +7,7 @@ describe 'Watcher' do
   let(:backend) { double('backend') }
   
   it 'asks the editor the name of the currently opened file' do
-    backend.should_receive(:register).with(File.mtime(file), file)
+    backend.should_receive(:register).with(File.mtime(file).to_i, file)
     watcher = TimeTap::Watcher.new(editor, backend)
     watcher.watch!
   end
