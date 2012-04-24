@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>TimeTap by elia</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>TimeTap</h1>
+        <p>TimeTap helps you track the time you spend coding on each project while in TextMate.</p>
+        <p class="view"><a href="https://github.com/elia/timetap">View the Project on GitHub <small>elia/timetap</small></a></p>
+        <ul>
+          <li><a href="https://github.com/elia/timetap/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/elia/timetap/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/elia/timetap">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>TimeTap helps you track the time you spend coding on each project while in TextMate.</p>
+
+<p>Once it's launched you don't have to bother anymore starting/stopping timers or 
+inventing some arbitrary amount of time to fill your fancy time tracker.</p>
+
+<h2>Installation</h2>
+
+<pre><code>gem install time_tap
+
+timetap --install
+</code></pre>
+
+<p>… and visit <a href="http://localhost:1111/">localhost:1111</a></p>
+
+<p><img src="http://f.cl.ly/items/17025fecf7189518cf07/timetap-project-list.png"><img src="http://f.cl.ly/items/7b96ad2f7b49a95fdfd0/timetap-project-page.png"></p>
+
+<h2>How it works</h2>
+
+<p>TimeTap keeps an eye on the modification time of the frontmost file in TextMate
+and tells you how much time you spent on each project. </p>
+
+<p>If you stop coding for a while while squeezing your brains TimeTap understands. 
+TimeTap will consider "coding time" pauses to up to 30 minutes between to saves 
+in the same project.</p>
+
+<p>Technically it saves a timestamp+path of the frontmost file in TextMate every 
+30 seconds, then it digests all this information in a nice Sinatra webapp.</p>
+
+<p>The server will respond on <a href="http://0.0.0.0:1111/">http://0.0.0.0:1111/</a>.</p>
+
+<h3>Assumptions</h3>
+
+<ul>
+<li>You code on TextMate.</li>
+<li>You save often (like me), at least every 30 minutes.</li>
+<li>You keep your code organized (I use ~/Code as main code folder).</li>
+</ul><h2>Customize</h2>
+
+<p>TimeTap uses a config file to control where projects are kept, etc. the path is:</p>
+
+<pre><code>~/.tap_config
+</code></pre>
+
+<p>Which can look like this:</p>
+
+<pre><code>root: "~"
+# root is where the logs will be saved
+
+code: Code
+# code is where all your projects live
+
+nested_project_layers: 1
+# see below about nested projects
+
+port: 1111
+# the port on localhost for the web interface
+
+ruby: /usr/bin/ruby
+# the ruby you want to use
+
+textmate:
+  projects: ~/Development/Current Projects
+  # where you keep your .tmproj files
+</code></pre>
+
+<h3>About "nested project layers"</h3>
+
+<p>TimeTap assumes you keep your projects inside a specific folder, like this:</p>
+
+<pre><code>~/Code/
+  tap/
+  tik_tak/
+  tk-win/
+  AcmeCorp/
+    website/
+    intranet/
+</code></pre>
+
+<p>But if you keep your projects grouped in subfolders like this:</p>
+
+<pre><code>~/Code/
+  Clients/
+    AcmeCorp/
+      website/
+      intranet/
+    BetaCorp/
+      skunkworks/
+  OpenSource/
+    project_one/
+    timetap/
+</code></pre>
+
+<p>then, the <code>nested_project_layers</code> key tells TimeTap how deep to look for project names inside a hierarchy (in the example a value of 2 will catch <code>AcmeCorp</code>, <code>BetaCorp</code>, <code>project_one</code> and <code>timetap</code>).</p>
+
+<h2>How to Contribute</h2>
+
+<p>Use it, love it, then...</p>
+
+<ul>
+<li>Fork the project.</li>
+<li>Make your feature addition or bug fix.</li>
+<li>Add tests for it. This is important so I don't break it in a
+future version unintentionally.</li>
+<li>Commit, do not mess with rakefile, version, or history.
+(if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)</li>
+<li>Send me a pull request. Bonus points for topic branches.</li>
+</ul><h3>Running &amp; installing in development</h3>
+
+<p>Run <code>ruby -Ilib bin/timetap</code> or run 
+<code>rake launcher &amp;&amp; launchctl load ~/Library/LaunchAgents</code> 
+to add a plist for OSX's launchd and have it launched automatically at login.</p>
+
+<h3>TODO</h3>
+
+<ul>
+<li>make it more configurable</li>
+<li>gemify (with jeweler)</li>
+<li>support other text editors, or at least make it easy to do so</li>
+<li>(r)spec it!</li>
+<li>flatten encoding quick-fixes with proper solutions (eat and spit only utf8)</li>
+<li>integration with external (online) time tracking tools</li>
+<li>export to csv (?)</li>
+</ul><h2>Copyright</h2>
+
+<p>Copyright (c) 2009 Elia Schito. See LICENSE for details.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/elia">elia</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-7137430-8");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
