@@ -133,6 +133,11 @@ to add a plist for OSX's launchd and have it launched automatically at login.
 - Ryan Wilcox [@rwilcox](https://github.com/rwilcox)
 
 
+## Related Projects
+
+- [Watch Tower](https://github.com/TechnoGate/watch_tower)
+- [Vim TimeTap](https://github.com/rainerborene/vim-timetap)
+
 
 ## Copyright
 
