@@ -128,7 +128,12 @@ to add a plist for OSX's launchd and have it launched automatically at login.
 - export to csv (?)
 
 
+## Credits
+
+- Ryan Wilcox [@rwilcox](https://github.com/rwilcox)
+
+
 
 ## Copyright
 
-Copyright (c) 2009 Elia Schito. See LICENSE for details.
+Copyright © 2009-2012 Elia Schito. See LICENSE for details.
