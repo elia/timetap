@@ -12,7 +12,7 @@ module TimeTap
       '~/Code/Mikamai', 
       '~/Code'
     ],
-    
+
     :nested_project_layers => 1,
     # see below about nested projects
 
@@ -26,89 +26,89 @@ module TimeTap
       # where you keep your .tmproj files
       :projects => '~/Development/Current Projects'
     },
-    
+
     :backend         => :file_system,
     :backend_options => { :file_name => '~/.timetap.history' },
     :editor          => :text_mate,
     :log_file        => '~/.timetap.log'
   }.with_indifferent_access
   attr_accessor :config
-  
-  
+
+
   @logger = Logger.new($stdout)
   attr_accessor :logger
-  
-  
+
+
   extend self
-  
-  
+
+
   # CONFIGURATION
 
   # Are we on 1.9?
   # FIXME: this is wrong! :)
   RUBY19 = RUBY_VERSION.to_f >= 1.9
-  
+
   def config= options = {}
     require 'active_support'
-    
+
     # CONFIG
     @config = HashWithIndifferentAccess.new(options)
     @config[:root] = File.expand_path(config[:root])
     @config[:port] = config[:port].to_i
   end
-  
-  
-  
+
+
+
   # BACKEND
-    
+
   def backend
     require 'time_tap/backend'
     @backend = Backend.load config[:backend], config[:backend_options]
   end
-  
+
   def editor
     require 'time_tap/editor'
     @backend = Editor.load config[:editor], config[:editor_options]
   end
-    
-  
+
+
   # START
-  
+
   def start options = {}
     # REQUIREMENTS
-  
+
     require 'yaml'
     require 'time_tap/project'
     require 'time_tap/watcher'
     require 'time_tap/server'
-    
+
     logger.info "[TimeTap] config: #{config.to_yaml}"
     # SIGNAL HANDLING
-    
+
     Signal.trap('INT')  {exit}
     Signal.trap('TERM') {exit}
-  
-  
+
+
     # WEB SERVER
-      
+
     Thread.abort_on_exception = true
-      
+
     @server = Thread.new {
       Signal.trap("INT")  {exit}
       Signal.trap("TERM") {exit}
-    
+
       Server.run! :host => 'localhost', :port => TimeTap.config[:port]
       exit
     }
-  
-    
+
+
     # WATCHER
-  
+
     watcher = Watcher.new(editor, backend)
     watcher.keep_watching
   end
-  
-  
+
+
   # Add a plist for OSX's launchd and have *TimeTap* launched automatically at login.
   def install_launcher!
     load_plist_info!
@@ -148,20 +148,20 @@ module TimeTap
       PLIST
     end
   end
-  
+
   def reload_launcher!
     load_plist_info!
     command = "launchctl unload #{plist_path}; launchctl load #{plist_path}"
     exec command
   end
-  
+
   private
-  
+
     attr_reader :plist_path, :plist_name
-    
+
     def load_plist_info!
       @plist_name ||= "com.eliaesocietas.TimeTap.plist"
       @plist_path ||= File.expand_path("~/Library/LaunchAgents/#{plist_name}")
     end
-    
+
 end

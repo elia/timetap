@@ -5,27 +5,27 @@ require 'action_view'
 
 module TimeTap
   class Server < Sinatra::Application
-  
+
     include ActionView::Helpers::DateHelper
     set :haml, { :format        => :html5,
-                 :attr_wrapper  => '"' , 
+                 :attr_wrapper  => '"' ,
                  :encoding => RUBY19 ? 'UTF-8' : nil}
     set :root, File.dirname(__FILE__)
     set :views, Proc.new { File.expand_path("../views", __FILE__) }
-  
-  
+
+
     before do
       content_type "text/html", :charset => "utf-8"
       # Project.load_file('~/.tap_history')
     end
-  
-  
-  
-  
-  
+
+
+
+
+
     get '/' do
       sort = (params[:sort] || :last).to_sym
-    
+
       @projects = Project.all.sort_by do |project|
         case sort
         when :name;     project.name
@@ -36,15 +36,15 @@ module TimeTap
     
       haml :index
     end
-  
+
     get '/project/:name' do
       @project = Project.find(params[:name])
       redirect '/' if @project.nil?
-    
+
       haml :project
     end
-  
-  
+
+
     get "/project/:name/:day" do
       @project = Project.find(params[:name])
       redirect '/' if @project.nil?
@@ -61,7 +61,7 @@ module TimeTap
       content_type "text/css", :charset => "utf-8"
       sass :stylesheet
     end
-  
+
     get '/mate' do
       tm_project = File.expand_path("#{TimeTap.config[:textmate][:projects] || 'Development/Current Projects'}/#{File.basename(params[:path])}.tmproj")
       if File.exist?(tm_project)
@@ -71,11 +71,11 @@ module TimeTap
       end
       redirect '/'
     end
-  
+
     get '/stop' do
       $stop = true
       Process.exit
     end
-  
+
   end
 end
