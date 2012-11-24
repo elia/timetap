@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'activesupport',  '~> 3.1.0'
   s.add_runtime_dependency 'haml'
   s.add_runtime_dependency 'sass'
-  s.add_runtime_dependency 'rb-appscript'
   s.add_runtime_dependency 'bundler',        '~> 1.0'
 
   s.add_development_dependency 'rspec',   '~> 2.0'

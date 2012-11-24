@@ -55,7 +55,7 @@ For TM2 and ST2 you need to install specific bundles (in the `vendor/` folder).
 
 ### TextMate
 
-Need to do nothing, thanks to `rb-appscript` :)
+Need to install `rb-appscript`: `gem install rb-appscript`
 
 
 ### TextMate 2
