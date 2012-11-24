@@ -5,7 +5,12 @@ TimeTap helps you track the time you spend coding on each project while in TextM
 Once it's launched you don't have to bother anymore starting/stopping timers or
 inventing some arbitrary amount of time to fill your fancy time tracker.
 
-## Installation
+<img src="http://f.cl.ly/items/17025fecf7189518cf07/timetap-project-list.png"/>
+<img src="http://f.cl.ly/items/7b96ad2f7b49a95fdfd0/timetap-project-page.png"/>
+
+
+
+## Installing
 
     gem install time_tap
 
@@ -13,8 +18,12 @@ inventing some arbitrary amount of time to fill your fancy time tracker.
 
 … and visit [localhost:1111](http://localhost:1111/)
 
-<img src="http://f.cl.ly/items/17025fecf7189518cf07/timetap-project-list.png"/>
-<img src="http://f.cl.ly/items/7b96ad2f7b49a95fdfd0/timetap-project-page.png"/>
+### Installing from source
+
+- Get the codez: `git clone git://github.com/elia/timetap.git`
+- Run `bundle exec bin/timetap --install`
+
+
 
 
 ## How it works
@@ -39,34 +48,47 @@ The server will respond on http://0.0.0.0:1111/.
 * You keep your code organized (I use ~/Code as main code folder).
 
 
+## Editors
+
+TimeTap works with TextMate, TextMate2 and SublimeText2.
+For TM2 and ST2 you need to install specific bundles (in the `vendor/` folder).
+
+### TextMate
+
+Need to do nothing, thanks to `rb-appscript` :)
 
 
-## Customize
+### TextMate 2
+
+You need to install the bundle in [`vendor/SublimeText2`](https://github.com/elia/timetap/tree/master/vendor/TextMate2)
+
+
+### SublimeText
+
+You need to install the package in [`vendor/SublimeText2`](https://github.com/elia/timetap/tree/master/vendor/SublimeText2)
+
+
+
+## Configuring
 
 TimeTap uses a config file to control where projects are kept, etc. the path is:
 
-    ~/.tap_config
+    ~/.timetap.config
 
 Which can look like this:
 
-    root: "~"
-    # root is where the logs will be saved
+```yaml
+port: 1111
+# the port on localhost for the web interface
 
-    code: Code
-    # code is where all your projects live
+# These are used to identify project root folders
+code_folders:
+  - ~/Code/MyCompany
+  - ~/Code
 
-    nested_project_layers: 1
-    # see below about nested projects
-
-    port: 1111
-    # the port on localhost for the web interface
-
-    ruby: /usr/bin/ruby
-    # the ruby you want to use
-    
-    textmate:
-      projects: ~/Development/Current Projects
-      # where you keep your .tmproj files
+# It's highly recomended to use 1.9.3
+ruby: /Users/elia/.rvm/bin/ruby-1.9.3-p286
+```
 
 
 
@@ -111,21 +133,14 @@ Use it, love it, then...
 * Send me a pull request. Bonus points for topic branches.
 
 
-### Running & installing in development
-
-Run `ruby -Ilib bin/timetap` or run 
-`rake launcher && launchctl load ~/Library/LaunchAgents` 
-to add a plist for OSX's launchd and have it launched automatically at login.
-
 ### TODO
 
 - <strike>make it more configurable</strike>
 - <strike>gemify (with jeweler)</strike>
-- support other text editors, or at least make it easy to do so
+- <strike>support other text editors, or at least make it easy to do so</strike>
 - (r)spec it!
 - flatten encoding quick-fixes with proper solutions (eat and spit only utf8)
 - integration with external (online) time tracking tools
-- export to csv (?)
 
 
 ## Credits
