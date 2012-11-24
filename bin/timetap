@@ -16,19 +16,19 @@ OptionParser.new do |opts|
   opts.on("-f", "--foreground", "Run in foreground (default).") do
     TimeTap.config[:background] = false
   end
-  
+
   opts.on("-b", "--background", "Run in background.") do
     TimeTap.config[:background] = true
   end
-  
+
   opts.on("-p", "--port PORT", "Use specified port for server. (default #{TimeTap.config['port']})") do |value|
     TimeTap.config[:port] = value
   end
-  
+
   opts.on("-l", "--log-level LEVEL", "Use specified port for server. (default #{TimeTap.config['port']})") do |value|
     TimeTap.config[:log_level] = value
   end
-  
+
   opts.on("-i", "--install", "Sets TimeTap to be launched automatically at login, and boots it.") do
     puts 'Installing launcher...'
     TimeTap.install_launcher!
@@ -49,11 +49,11 @@ end.parse!
 TimeTap.config[:foreground] = !TimeTap.config[:background]
 if TimeTap.config[:background]
   require 'time_tap/daemon'
-  
+
   pid = fork {
     # Try to replace "ruby" with "TimeTap" in the command string (for "ps -A" & co.)
     $0 = 'TimeTap'
-    
+
     Process.daemon(true)
     TimeTap.start
   }

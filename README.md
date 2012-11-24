@@ -2,15 +2,15 @@
 
 TimeTap helps you track the time you spend coding on each project while in TextMate.
 
-Once it's launched you don't have to bother anymore starting/stopping timers or 
+Once it's launched you don't have to bother anymore starting/stopping timers or
 inventing some arbitrary amount of time to fill your fancy time tracker.
 
 ## Installation
 
     gem install time_tap
-    
+
     timetap --install
-    
+
 … and visit [localhost:1111](http://localhost:1111/)
 
 <img src="http://f.cl.ly/items/17025fecf7189518cf07/timetap-project-list.png"/>
@@ -20,13 +20,13 @@ inventing some arbitrary amount of time to fill your fancy time tracker.
 ## How it works
 
 TimeTap keeps an eye on the modification time of the frontmost file in TextMate
-and tells you how much time you spent on each project. 
+and tells you how much time you spent on each project.
 
-If you stop coding for a while while squeezing your brains TimeTap understands. 
-TimeTap will consider "coding time" pauses to up to 30 minutes between to saves 
+If you stop coding for a while while squeezing your brains TimeTap understands.
+TimeTap will consider "coding time" pauses to up to 30 minutes between to saves
 in the same project.
 
-Technically it saves a timestamp+path of the frontmost file in TextMate every 
+Technically it saves a timestamp+path of the frontmost file in TextMate every
 30 seconds, then it digests all this information in a nice Sinatra webapp.
 
 The server will respond on http://0.0.0.0:1111/.
@@ -48,19 +48,19 @@ TimeTap uses a config file to control where projects are kept, etc. the path is:
     ~/.tap_config
 
 Which can look like this:
-    
+
     root: "~"
     # root is where the logs will be saved
-    
+
     code: Code
     # code is where all your projects live
-    
+
     nested_project_layers: 1
     # see below about nested projects
-    
+
     port: 1111
     # the port on localhost for the web interface
-    
+
     ruby: /usr/bin/ruby
     # the ruby you want to use
     
@@ -81,7 +81,7 @@ TimeTap assumes you keep your projects inside a specific folder, like this:
       AcmeCorp/
         website/
         intranet/
-        
+
 But if you keep your projects grouped in subfolders like this:
 
     ~/Code/
