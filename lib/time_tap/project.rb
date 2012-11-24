@@ -2,9 +2,9 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/numeric/time'
 
 class TimeTap::Project
-    
+
   # CONFIG
-    
+
   class << self
     attr_accessor :pause_limit
     def load_projects
@@ -14,13 +14,13 @@ class TimeTap::Project
         end
       end
     end
-    
+
     def projects
       load_projects
       @projects
     end
     attr_reader :backend
-    
+
     def reload!
       @pause_limit = 30.minutes
       @projects = {}.with_indifferent_access
@@ -40,11 +40,11 @@ class TimeTap::Project
     def logger
       TimeTap.logger
     end
-    
+
     def all
       projects.values
     end
-    
+
     def register time, path
       project = self[path]
       if project
@@ -54,7 +54,7 @@ class TimeTap::Project
         logger.info "[TimeTap::Project] skipping #{time}, no project"
       end
     end
-    
+
     def find name
       projects[name.underscore.downcase]
     end
@@ -65,20 +65,20 @@ class TimeTap::Project
       how_nested = 1
 
       regex_suffix = "([^/]+)"
-      
+
       folders = TimeTap.config[:code_folders].map do |folder|
         folder = File.expand_path(folder)
         folder = Dir[folder]
       end.flatten
-      
+
       folders_regex = folders.map{|f| Regexp.escape f}.join('|')
       res = path.scan(%r{(#{folders_regex})/#{regex_suffix}}).flatten
-      
+
       # res = path.scan(%r{(#{TimeTap.config[:code] || "Code"})/#{regex_suffix}}).flatten
       mid_path = res[0] # not in a MatchObj group any more, so it's 0 based
       name = res[how_nested]
       mid_path, name = path.scan(%r{#{File.expand_path("~")}/([^/]+)/([^/]+)}).flatten if name.nil?
-      
+
       if name
         name.chomp!
         key = name.underscore.downcase
@@ -102,14 +102,14 @@ class TimeTap::Project
     @path = File.expand_path("~/#{mid_path}/#{name}/")
     @pinches = []
   end
-  
-  
-  
-  
+
+
+
+
   # ATTRIBUTES
-  
+
   attr_reader :name, :path, :pinches
-    
+
   def work_time
     pinches.sum(&:duration)
   end
@@ -136,12 +136,12 @@ class TimeTap::Project
       seconds = duration
 
       hours = mins = 0
-      if seconds >=  60 then
-        mins = (seconds / 60).to_i 
+      if seconds >= 60 then
+        mins = (seconds / 60).to_i
         seconds = (seconds % 60 ).to_i
 
         if mins >= 60 then
-          hours = (mins / 60).to_i 
+          hours = (mins / 60).to_i
           mins = (mins % 60).to_i
         end
       end
