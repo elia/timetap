@@ -138,6 +138,7 @@ Use it, love it, then...
 - <strike>make it more configurable</strike>
 - <strike>gemify (with jeweler)</strike>
 - <strike>support other text editors, or at least make it easy to do so</strike>
+- commands to install editor packages/bundles
 - (r)spec it!
 - flatten encoding quick-fixes with proper solutions (eat and spit only utf8)
 - integration with external (online) time tracking tools
