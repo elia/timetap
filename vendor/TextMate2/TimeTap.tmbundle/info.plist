@@ -8,6 +8,8 @@
 	<string>Elia Schito</string>
 	<key>description</key>
 	<string>TimeTap hooks.</string>
+	<key>isEnabled</key>
+	<true/>
 	<key>name</key>
 	<string>TimeTap</string>
 	<key>uuid</key>

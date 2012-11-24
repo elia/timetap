@@ -6,9 +6,12 @@
 	<string>nop</string>
 	<key>command</key>
 	<string>#!/usr/bin/env ruby -wKU
-file = File.expand_path("~/.timetap.tm2.current_file")
-File.open(file, 'w') do |f|
-  f &lt;&lt; ENV['TM_FILEPATH']
+current_file = ENV['TM_FILEPATH'].to_s
+
+if File.exist? current_file
+  system 'touch', current_file
+  file = File.expand_path("~/.timetap.tm2.current_file")
+  File.open(file, 'w') { |f| f &lt;&lt; current_file }
 end
 </string>
 	<key>input</key>
@@ -24,7 +27,7 @@ end
 	<key>outputLocation</key>
 	<string>discard</string>
 	<key>semanticClass</key>
-	<string>callback.application.did-activate</string>
+	<string>callback.document.did-save</string>
 	<key>uuid</key>
 	<string>1C8DC4BC-DF6C-4E8C-A65C-E6A7FAF6911E</string>
 	<key>version</key>
