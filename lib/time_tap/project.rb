@@ -61,22 +61,12 @@ class TimeTap::Project
 
     def [] path
       return if path.nil? or path.empty?
-      path = File.expand_path(path)
+      path       = File.expand_path(path)
       how_nested = 1
+      res        = path.scan(folders_regexp).flatten
+      mid_path   = res[0] # not in a MatchObj group any more, so it's 0 based
+      name       = res[how_nested]
 
-      regex_suffix = "([^/]+)"
-
-      folders = TimeTap.config[:code_folders].map do |folder|
-        folder = File.expand_path(folder)
-        folder = Dir[folder]
-      end.flatten
-
-      folders_regex = folders.map{|f| Regexp.escape f}.join('|')
-      res = path.scan(%r{(#{folders_regex})/#{regex_suffix}}).flatten
-
-      # res = path.scan(%r{(#{TimeTap.config[:code] || "Code"})/#{regex_suffix}}).flatten
-      mid_path = res[0] # not in a MatchObj group any more, so it's 0 based
-      name = res[how_nested]
       mid_path, name = path.scan(%r{#{File.expand_path("~")}/([^/]+)/([^/]+)}).flatten if name.nil?
 
       if name
@@ -89,6 +79,23 @@ class TimeTap::Project
         projects[key]
       else
         nil
+      end
+    end
+
+
+    private
+
+    def folders_regexp
+      @folders_regexp ||= begin
+        regex_suffix = "([^/]+)"
+
+        folders = TimeTap.config[:code_folders].map do |folder|
+          folder = File.expand_path(folder)
+          folder = Dir[folder]
+        end.flatten
+
+        regexp = folders.map{|f| Regexp.escape f}.join('|')
+        %r{(#{regexp})/#{regex_suffix}}
       end
     end
   end
