@@ -115,6 +115,7 @@ module TimeTap
     ruby        = config[:ruby] || "/usr/bin/ruby"
     include_dir = '-I'+File.expand_path('../../lib', __FILE__)
     launcher    = File.expand_path('../../bin/timetap', __FILE__)
+    working_directory = File.expand_path('../../', __FILE__)
 
     puts "\nCreating launchd plist in\n  #{plist_path}"
 
@@ -127,16 +128,24 @@ module TimeTap
 	<key>Label</key>
 	<string>com.eliaesocietas.TimeTap</string>
 
-	<key>Program</key>
-	<string>#{ruby}</string>
-
 	<key>ProgramArguments</key>
 	<array>
 		<string>#{ruby}</string>
 		<string>#{include_dir}</string>
+		<string>-S</string>
+		<string>bundle</string>
+		<string>exec</string>
 		<string>#{launcher}</string>
 		<string>-f</string>
 	</array>
+
+
+  <key>WorkingDirectory</key>
+  <string>#{working_directory}</string>
+  <key>StandardErrorPath</key>
+  <string>/usr/local/var/log/timetap.log</string>
+  <key>StandardOutPath</key>
+  <string>/usr/local/var/log/timetap.log</string>
 
 	<key>OnDemand</key>
 	<false/>
@@ -155,13 +164,16 @@ module TimeTap
     exec command
   end
 
+
+
+
   private
 
-    attr_reader :plist_path, :plist_name
+  attr_reader :plist_path, :plist_name
 
-    def load_plist_info!
-      @plist_name ||= "com.eliaesocietas.TimeTap.plist"
-      @plist_path ||= File.expand_path("~/Library/LaunchAgents/#{plist_name}")
-    end
+  def load_plist_info!
+    @plist_name ||= "com.eliaesocietas.TimeTap.plist"
+    @plist_path ||= File.expand_path("~/Library/LaunchAgents/#{plist_name}")
+  end
 
 end
