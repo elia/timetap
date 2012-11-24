@@ -6,11 +6,16 @@ module TimeTap
     :root => "~",
     # root is where the logs will be saved
 
-    :code => 'Code',
     # code is where all your projects live
-    :code_folders => [
-      '~/Code/Mikamai', 
-      '~/Code'
+    :code_folders => %w[
+      ~/Code
+      ~/Developer
+      ~/Development
+      ~/src
+      ~/code
+      ~/rails
+      ~/Desktop
+      ~
     ],
 
     :nested_project_layers => 1,
@@ -21,11 +26,6 @@ module TimeTap
 
     :ruby => '/usr/bin/ruby',
     # the ruby you want to use
-
-    :textmate => {
-      # where you keep your .tmproj files
-      :projects => '~/Development/Current Projects'
-    },
 
     :backend         => :file_system,
     :backend_options => { :file_name => '~/.timetap.history' },

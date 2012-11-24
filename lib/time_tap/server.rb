@@ -63,7 +63,7 @@ module TimeTap
     end
 
     get '/mate' do
-      tm_project = File.expand_path("#{TimeTap.config[:textmate][:projects] || 'Development/Current Projects'}/#{File.basename(params[:path])}.tmproj")
+      tm_project = Dir[ params[:path]+'/*.tmproj' ].first
       if File.exist?(tm_project)
         `open "#{tm_project}"`
       else
