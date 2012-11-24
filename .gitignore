@@ -7,3 +7,4 @@ pkg/*
 .bundle
 .sass*
 /Gemfile.lock
+/log/*.log
