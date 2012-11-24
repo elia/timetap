@@ -6,3 +6,4 @@ pkg/*
 *.gem
 .bundle
 .sass*
+/Gemfile.lock
