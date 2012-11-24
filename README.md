@@ -1,5 +1,8 @@
 # TimeTap
 
+[![Build Status](https://secure.travis-ci.org/elia/timetap.png?branch=master)](https://travis-ci.org/elia/timetap)
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/elia/timetap)
+
 TimeTap helps you track the time you spend coding on each project while in TextMate.
 
 Once it's launched you don't have to bother anymore starting/stopping timers or
