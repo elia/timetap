@@ -111,6 +111,8 @@ module TimeTap
 
   # Add a plist for OSX's launchd and have *TimeTap* launched automatically at login.
   def install_launcher!
+    puts 'Installing launcher...'
+
     load_plist_info!
     ruby        = config[:ruby] || "/usr/bin/ruby"
     include_dir = '-I'+File.expand_path('../../lib', __FILE__)
@@ -159,9 +161,30 @@ module TimeTap
   end
 
   def reload_launcher!
+    puts 'Reloading system launcher...'
+
     load_plist_info!
     command = "launchctl unload #{plist_path}; launchctl load #{plist_path}"
     exec command
+  end
+
+  def load_user_config!
+    require 'yaml'
+    TimeTap.config.merge! YAML.load_file(user_config) if File.exist?(user_config)
+  end
+
+  def user_config
+    @user_config ||= File.expand_path('~/.timetap.config')
+  end
+
+  def install_config!
+    puts 'Checking config...'
+    unless File.exist? user_config
+      require 'fileutils'
+      example_config = File.expand_path('../time_tap/config.yml.example', __FILE__)
+      FileUtils.copy example_config, user_config
+      puts "Added default config to #{user_config}"
+    end
   end
 
 

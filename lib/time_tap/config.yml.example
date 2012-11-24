@@ -1,0 +1,32 @@
+# This is where the "db" will be saved
+root: "~"
+
+# See the README about nested projects
+nested_project_layers: 1
+
+# The port on localhost for the web interface
+port: 1111
+
+# Set your editor:
+#
+#   editor: text_mate
+#   editor: sublime_text2
+editor: text_mate2
+
+# Use a custom Ruby
+#
+# RVM Example:
+#   ruby: /Users/elia/.rvm/bin/ruby-1.9.3-p286
+
+# Replace the folders timetap will look into:
+# Example:
+#
+#   code_folders:
+#     - "/Volumes/Oliver/Code"
+#     - "~/Code/Mikamai"
+#     - "~/Code"
+#     - "~"
+#
+
+
+

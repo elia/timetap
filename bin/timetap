@@ -4,10 +4,7 @@
 require 'time_tap'
 
 
-require 'yaml'
-user_config = File.expand_path('~/.timetap.config')
-TimeTap.config.merge! YAML.load_file(user_config) if File.exist?(user_config)
-
+TimeTap.load_user_config!
 
 require 'optparse'
 OptionParser.new do |opts|
@@ -30,19 +27,11 @@ OptionParser.new do |opts|
   end
 
   opts.on("-i", "--install", "Sets TimeTap to be launched automatically at login, and boots it.") do
-    puts 'Installing launcher...'
     TimeTap.install_launcher!
-    
-    unless File.exist? user_config
-      require 'fileutils'
-      puts 'Copying example config file to ~/.tap_config...'
-      FileUtils.cp config_file, user_config
-    end
-    
-    puts 'Reloading system launcher...'
+    TimeTap.install_config!
     TimeTap.reload_launcher!
-    
-    exit # TimeTap::reload_launcher! uses `exec` so this is never actually ran
+    # TimeTap::reload_launcher! uses `exec` so it never gets here
+    exit
   end
 end.parse!
 
