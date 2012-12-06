@@ -6,16 +6,19 @@ require 'action_view'
 module TimeTap
   class Server < Sinatra::Application
 
+    # Are we on 1.9?
+    ruby19 = RUBY_VERSION.to_f >= 1.9
+
     include ActionView::Helpers::DateHelper
     set :haml, { :format        => :html5,
                  :attr_wrapper  => '"' ,
-                 :encoding => RUBY19 ? 'UTF-8' : nil}
+                 :encoding => ruby19 ? 'UTF-8' : nil}
     set :root, File.dirname(__FILE__)
-    set :views, Proc.new { File.expand_path("../views", __FILE__) }
+    set :views, Proc.new { File.expand_path('../views', __FILE__) }
 
 
     before do
-      content_type "text/html", :charset => "utf-8"
+      content_type 'text/html', :charset => 'utf-8'
       # Project.load_file('~/.tap_history')
     end
 
@@ -28,12 +31,12 @@ module TimeTap
 
       @projects = Project.all.sort_by do |project|
         case sort
-        when :name;     project.name
+        when :name;      project.name
         when :last;     -project.pinches.last.end_time.to_i
         when :elapsed;  -project.work_time
         end
       end.select{|p| p.work_time > 30.minutes}
-    
+
       haml :index
     end
 
@@ -45,7 +48,7 @@ module TimeTap
     end
 
 
-    get "/project/:name/:day" do
+    get '/project/:name/:day' do
       @project = Project.find(params[:name])
       redirect '/' if @project.nil?
 
@@ -57,8 +60,8 @@ module TimeTap
     end
 
 
-    get "/stylesheet.css" do
-      content_type "text/css", :charset => "utf-8"
+    get '/stylesheet.css' do
+      content_type 'text/css', :charset => 'utf-8'
       sass :stylesheet
     end
 

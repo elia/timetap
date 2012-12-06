@@ -1,71 +1,27 @@
-require 'active_support/core_ext/hash/indifferent_access'
-require 'logger'
-
 module TimeTap
-  @config = {
-    :root => "~",
-    # root is where the logs will be saved
-
-    # code is where all your projects live
-    :code_folders => %w[
-      ~/Code
-      ~/Developer
-      ~/Development
-      ~/src
-      ~/code
-      ~/rails
-      ~/Desktop
-      ~
-    ],
-
-    :nested_project_layers => 1,
-    # see below about nested projects
-
-    :port => 1111,
-    # the port on localhost for the web interface
-
-    :ruby => '/usr/bin/ruby',
-    # the ruby you want to use
-
-    :backend         => :file_system,
-    :backend_options => { :file_name => '~/.timetap.history' },
-    :editor          => :text_mate,
-    :log_file        => '~/.timetap.log'
-  }.with_indifferent_access
-  attr_accessor :config
-
-
-  @logger = Logger.new($stdout)
-  attr_accessor :logger
-
-
   extend self
 
 
-  # CONFIGURATION
+  # Configuration
+  require 'time_tap/config'
+  extend Config
 
-  # Are we on 1.9?
-  # FIXME: this is wrong! :)
-  RUBY19 = RUBY_VERSION.to_f >= 1.9
+  # Launcher
+  require 'time_tap/launcher'
+  extend Launcher
 
-  def config= options = {}
-    require 'active_support'
+  # Logger
+  require 'logger'
+  attr_accessor :logger
+  @logger = Logger.new($stdout)
 
-    # CONFIG
-    @config = HashWithIndifferentAccess.new(options)
-    @config[:root] = File.expand_path(config[:root])
-    @config[:port] = config[:port].to_i
-  end
-
-
-
-  # BACKEND
-
+  # Backend
   def backend
     require 'time_tap/backend'
     @backend = Backend.load config[:backend], config[:backend_options]
   end
 
+  # Editor
   def editor
     require 'time_tap/editor'
     @backend = Editor.load config[:editor], config[:editor_options]
@@ -107,96 +63,4 @@ module TimeTap
     watcher = Watcher.new(editor, backend)
     watcher.keep_watching
   end
-
-
-  # Add a plist for OSX's launchd and have *TimeTap* launched automatically at login.
-  def install_launcher!
-    puts 'Installing launcher...'
-
-    load_plist_info!
-    ruby        = config[:ruby] || "/usr/bin/ruby"
-    include_dir = '-I'+File.expand_path('../../lib', __FILE__)
-    launcher    = File.expand_path('../../bin/timetap', __FILE__)
-    working_directory = File.expand_path('../../', __FILE__)
-
-    puts "\nCreating launchd plist in\n  #{plist_path}"
-
-    File.open(plist_path, 'w') do |file|
-      file << <<-PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>Label</key>
-	<string>com.eliaesocietas.TimeTap</string>
-
-	<key>ProgramArguments</key>
-	<array>
-		<string>#{ruby}</string>
-		<string>#{include_dir}</string>
-		<string>-S</string>
-		<string>bundle</string>
-		<string>exec</string>
-		<string>#{launcher}</string>
-		<string>-f</string>
-	</array>
-
-
-  <key>WorkingDirectory</key>
-  <string>#{working_directory}</string>
-  <key>StandardErrorPath</key>
-  <string>/usr/local/var/log/timetap.log</string>
-  <key>StandardOutPath</key>
-  <string>/usr/local/var/log/timetap.log</string>
-
-	<key>OnDemand</key>
-	<false/>
-
-	<key>RunAtLoad</key>
-	<true/>
-</dict>
-</plist>
-      PLIST
-    end
-  end
-
-  def reload_launcher!
-    puts 'Reloading system launcher...'
-
-    load_plist_info!
-    command = "launchctl unload #{plist_path}; launchctl load #{plist_path}"
-    exec command
-  end
-
-  def load_user_config!
-    require 'yaml'
-    TimeTap.config.merge! YAML.load_file(user_config) if File.exist?(user_config)
-  end
-
-  def user_config
-    @user_config ||= File.expand_path('~/.timetap.config')
-  end
-
-  def install_config!
-    puts 'Checking config...'
-    unless File.exist? user_config
-      require 'fileutils'
-      example_config = File.expand_path('../time_tap/config.yml.example', __FILE__)
-      FileUtils.copy example_config, user_config
-      puts "Added default config to #{user_config}"
-    end
-  end
-
-
-
-
-  private
-
-  attr_reader :plist_path, :plist_name
-
-  def load_plist_info!
-    @plist_name ||= "com.eliaesocietas.TimeTap.plist"
-    @plist_path ||= File.expand_path("~/Library/LaunchAgents/#{plist_name}")
-  end
-
 end
