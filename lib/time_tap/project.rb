@@ -1,9 +1,8 @@
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/numeric/time'
+require 'monitor'
 
 class TimeTap::Project
-
-  # CONFIG
 
   class << self
     attr_accessor :pause_limit
@@ -105,6 +104,7 @@ class TimeTap::Project
 
 
   def initialize mid_path, name
+    extend MonitorMixin
     @name = name
     @path = File.expand_path("~/#{mid_path}/#{name}/")
     @pinches = []
@@ -157,18 +157,20 @@ class TimeTap::Project
   end
 
   def << time
-    time = Time.at time
-    last_pinch = pinches.last
-    if pinches.empty?
-      pinches << Pinch.new(time)
-    else
-      last_time = last_pinch.end_time
-      return unless time > last_time
-
-      if (time - last_time) < self.class.pause_limit
-        last_pinch.end_time = time
-      else
+    synchronize do
+      time = Time.at time
+      last_pinch = pinches.last
+      if pinches.empty?
         pinches << Pinch.new(time)
+      else
+        last_time = last_pinch.end_time
+        return unless time > last_time
+
+        if (time - last_time) < self.class.pause_limit
+          last_pinch.end_time = time
+        else
+          pinches << Pinch.new(time)
+        end
       end
     end
   end
