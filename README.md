@@ -1,7 +1,18 @@
+> This project has evolved and is now known as 
+
+# [TimeSampler](https://www.timesampler.com)
+
+Here's how it looks now (scroll down for the original README)
+
+[![TimeSampler screenshot](http://cl.ly/image/1N0j150X1Z1X/Screen%20Shot%202014-04-17%20at%2014.09.01.png)](https://www.timesampler.com)
+
+
+---
+
 # TimeTap
 
-[![Build Status](https://secure.travis-ci.org/elia/timetap.png?branch=master)](https://travis-ci.org/elia/timetap)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/elia/timetap)
+[![Build Status](https://secure.travis-ci.org/elia/timetap.svg?branch=master)](https://travis-ci.org/elia/timetap)
+[![Code Climate](http://img.shields.io/codeclimate/github/elia/timetap.svg)](https://codeclimate.com/github/elia/timetap)
 
 TimeTap helps you track the time you spend coding on each project while in TextMate.
 
